@@ -1,0 +1,321 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.sf-wrap {
+  background: #0a0d12;
+  border: 1px solid #1e3a4a;
+  border-radius: 8px;
+  padding: 1.25rem;
+  font-family: var(--font-mono), monospace;
+  color: #8eb8c8;
+}
+
+.sf-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #1e3a4a;
+  padding-bottom: 0.75rem;
+}
+.sf-title { font-size: 11px; letter-spacing: 0.18em; color: #4a9bb5; text-transform: uppercase; }
+.sf-sub { font-size: 10px; color: #2e5a6e; letter-spacing: 0.08em; }
+.blink { animation: blink 1.4s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.controls { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; align-items: center; }
+.ctrl-label { font-size: 10px; letter-spacing: 0.12em; color: #2e5a6e; margin-right: 4px; }
+
+.pill {
+  font-size: 10px; padding: 3px 8px; border-radius: 2px;
+  border: 1px solid #1e3a4a; cursor: pointer; color: #4a7a8a;
+  background: transparent; letter-spacing: 0.06em;
+  font-family: var(--font-mono), monospace;
+  transition: border-color 0.1s, color 0.1s;
+}
+.pill:hover { border-color: #4a9bb5; color: #8eb8c8; }
+.pill.active { border-color: #4a9bb5; color: #a8d8e8; background: #0d1e2a; }
+
+.matrix-outer { overflow-x: auto; position: relative; }
+
+table.matrix { border-collapse: collapse; font-size: 10px; font-family: var(--font-mono), monospace; }
+table.matrix th, table.matrix td { width: 30px; height: 30px; text-align: center; vertical-align: middle; }
+
+th.row-label {
+  width: 90px; text-align: right; padding-right: 8px;
+  font-size: 10px; font-weight: 400; color: #4a9bb5;
+  white-space: nowrap; letter-spacing: 0.04em;
+}
+th.col-label {
+  font-size: 9px; font-weight: 400; color: #2e5a6e;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  padding-bottom: 6px; height: 76px; vertical-align: bottom;
+  white-space: nowrap; letter-spacing: 0.04em;
+}
+
+td.cell {
+  cursor: pointer; border-radius: 1px; font-size: 9px; font-weight: 500;
+  border: 1px solid transparent; transition: border-color 0.1s;
+}
+td.cell:hover { border-color: #4a9bb5; }
+td.self { background: #0d1520; }
+
+.r5 { background: #0a2e1a; color: #2ecc7a; border-color: #0d3d20; }
+.r4 { background: #0a2218; color: #1a8a4e; border-color: #0a2e1a; }
+.r3 { background: #0d1e2a; color: #2e5a6e; border-color: #152535; }
+.r2 { background: #2a1500; color: #cc6600; border-color: #3a1e00; }
+.r1 { background: #2a0a0a; color: #cc2222; border-color: #3a1010; }
+.rX { background: #0d1218; color: #1e3a4a; font-size: 8px; }
+
+.legend {
+  display: flex; gap: 12px; flex-wrap: wrap; margin-top: 1rem;
+  padding-top: 0.75rem; border-top: 1px solid #1e3a4a; align-items: center;
+}
+.legend-label { font-size: 9px; letter-spacing: 0.12em; color: #2e5a6e; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; }
+.swatch { width: 12px; height: 12px; border-radius: 1px; }
+.s5 { background: #0a2e1a; border: 1px solid #2ecc7a; }
+.s4 { background: #0a2218; border: 1px solid #1a8a4e; }
+.s3 { background: #0d1e2a; border: 1px solid #2e5a6e; }
+.s2 { background: #2a1500; border: 1px solid #cc6600; }
+.s1 { background: #2a0a0a; border: 1px solid #cc2222; }
+.sX { background: #0d1218; border: 1px solid #1e3a4a; }
+
+.tooltip {
+  position: fixed;
+  background: #060c12;
+  border: 1px solid #4a9bb5;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-family: var(--font-mono), monospace;
+  pointer-events: none;
+  max-width: 260px;
+  line-height: 1.6;
+  z-index: 9999;
+  display: none;
+  color: #8eb8c8;
+}
+.tooltip .tt-head {
+  font-size: 10px; letter-spacing: 0.1em; color: #4a9bb5;
+  display: block; margin-bottom: 6px;
+  border-bottom: 1px solid #1e3a4a; padding-bottom: 5px;
+}
+.tooltip .tt-score { font-size: 9px; color: #2e5a6e; margin-top: 5px; letter-spacing: 0.06em; }
+</style>
+
+<div class="sf-wrap">
+  <div class="sf-header">
+    <span class="sf-title">Interspecies Relations Matrix</span>
+    <span class="sf-sub">Galactic Continuum — Diplomatic Assessment Registry</span>
+    <span class="sf-sub" style="margin-left:auto;">&#9632;<span class="blink">_</span></span>
+  </div>
+
+  <div class="controls">
+    <span class="ctrl-label">FILTER:</span>
+    <div id="pills" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+  </div>
+
+  <div class="matrix-outer">
+    <table class="matrix" id="matrix"></table>
+  </div>
+
+  <div class="legend">
+    <span class="legend-label">STATUS:</span>
+    <div class="legend-item"><div class="swatch s5"></div><span style="color:#2ecc7a;">●●</span><span style="color:#2e5a6e;font-size:10px;">strong positive</span></div>
+    <div class="legend-item"><div class="swatch s4"></div><span style="color:#1a8a4e;">●</span><span style="color:#2e5a6e;font-size:10px;">positive</span></div>
+    <div class="legend-item"><div class="swatch s3"></div><span style="color:#2e5a6e;">–</span><span style="color:#2e5a6e;font-size:10px;">neutral</span></div>
+    <div class="legend-item"><div class="swatch s2"></div><span style="color:#cc6600;">▲</span><span style="color:#2e5a6e;font-size:10px;">friction</span></div>
+    <div class="legend-item"><div class="swatch s1"></div><span style="color:#cc2222;">✕</span><span style="color:#2e5a6e;font-size:10px;">tension</span></div>
+    <div class="legend-item"><div class="swatch sX"></div><span style="color:#1e3a4a;">?</span><span style="color:#2e5a6e;font-size:10px;">uncharacterized</span></div>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+const S = ['Akrelian','Ammonadda','Enathi','Formicides','Gorrauth','Human','Kaluarga','Lumifloofs','Memnos','Pelhari','Quorreni','Rethani','Undrel','Vaylon'];
+
+function key(a,b){ return [a,b].sort().join('|'); }
+const rel = {};
+function set(a,b,score,note){ rel[key(a,b)]={score,note}; }
+
+set('Akrelian','Human',4,'Near-human appearance creates initial rapport; Akrelians find humans easy to work alongside. Humans are occasionally unsettled by how little they know about them.');
+set('Akrelian','Vaylon',3,'Both value understatement in different ways. Vaylon find the lack of visible status signaling either refreshing or suspicious. Akrelians find Vaylon protocol overhead mild but present.');
+set('Akrelian','Pelhari',4,'Mutual appreciation for low-friction, high-information interaction. The two most illegible species in the Continuum get along well, possibly because neither is trying to read the other.');
+set('Akrelian','Memnos',4,'Shared posture of acknowledged opacity. Memnos do not press the nano-integration question; Akrelians do not press the origin-biology question. Productive silence on both sides.');
+set('Akrelian','Gorrauth',3,'Gorrauth directness occasionally surfaces the gap between Akrelian presentation and capability. Akrelians receive this without apparent discomfort. Functional.');
+set('Akrelian','Formicides',3,'Formicide chemical sensing registers Akrelians as unusual. No formal study. Both parties are aware of this and neither has escalated.');
+set('Akrelian','Ammonadda',4,'Ammonadda find Akrelians genuinely interesting without being able to articulate why. Akrelians find knots efficient. Good working dynamic.');
+set('Akrelian','Kaluarga',3,'Kaluarga Substrate sensitivity registers something around Akrelians that does not map to standard categories. Neither species has pressed this formally.');
+set('Akrelian','Enathi',4,'Two species with high-capability low-profile orientations. Occupational overlap in intelligence and clandestine work. Mutual professional respect.');
+set('Akrelian','Lumifloofs',3,'Lumifloofs read Akrelians as emotionally coherent but unusually quiet. The empathic channel returns something, just not quite what it returns from other species.');
+set('Akrelian','Quorreni',3,'Functional. No documented friction. Quorreni appreciate that Akrelians do not ask unnecessary questions.');
+set('Akrelian','Rethani',3,'Standard functional dynamic. Rethani do not track Akrelians differently from other humanoids in their visual field.');
+set('Akrelian','Undrel',3,'Undrel curiosity about Akrelian nano-integration is consistent and rarely satisfied. Akrelians receive the questions politely.');
+set('Ammonadda','Human',4,'Humans find knots chaotic but effective and tend to develop genuine affection for them. Ammonadda find humans entertainingly straightforward. Strong field partnership record.');
+set('Ammonadda','Gorrauth',4,'Gorrauth directness is fully legible to the knot via link consensus. Ammonadda chaotic energy does not register as duplicity to Gorrauth. Unusually clean dynamic.');
+set('Ammonadda','Memnos',3,'Memnos deliberateness and Ammonadda perpetual motion produce interactions with a significant tempo gap. Both parties compensate. Functional.');
+set('Ammonadda','Pelhari',3,'Pelhari cannot read knot-link communication. Ammonadda expression is also mostly opaque. Working together requires explicit verbal channel use.');
+set('Ammonadda','Vaylon',2,'Vaylon status-signal architecture has no channel for knot-unit entities. Ammonadda find Vaylon protocol overhead inefficient. Low-grade persistent friction.');
+set('Ammonadda','Formicides',3,'Two non-standard-form social species with unusual communication channels. Parallel structure rather than conflict.');
+set('Ammonadda','Kaluarga',4,'Kaluarga harmonic sensitivity picks up something in the knot-link; described as pleasant rather than disorienting. Good affective compatibility.');
+set('Ammonadda','Enathi',3,'Enathi find the knot difficult to surveil individually — the shared sensory field means observing one member provides incomplete data.');
+set('Ammonadda','Lumifloofs',4,'Lumifloof empathic reception handles the distributed knot signal differently than individual emitters — reported as richer than expected. Strong affective bond potential.');
+set('Ammonadda','Quorreni',3,'Quorreni economy of expression and Ammonadda high-energy output produce an asymmetric but functional pairing.');
+set('Ammonadda','Rethani',4,'Rethani 270° field tracks all knot members simultaneously without effort. Ammonadda find this oddly comfortable. Good operational pairing in complex environments.');
+set('Ammonadda','Undrel',4,'Shared enthusiasm for novel objects and derelict environments. Knot sensory coverage and Undrel six-eye depth resolution are complementary. Strong field team record.');
+set('Enathi','Human',3,'Humans hire Enathi regularly for clandestine work and are aware they are probably also employed by other parties simultaneously. This arrangement is understood by both sides.');
+set('Enathi','Gorrauth',2,'Gorrauth directness is fundamentally incompatible with Enathi information economy. Gorrauth experience dealing with Enathi as cognitively fatiguing in a specific way.');
+set('Enathi','Vaylon',3,'Vaylon chromatic perception may extend into ranges where active camouflage is less effective. This is noted in Enathi operational literature.');
+set('Enathi','Pelhari',4,'Mutual operational respect between two species with high internal opacity. The relationship is professional and durable across factional lines.');
+set('Enathi','Memnos',3,'Memnos radiation-resistant sensors may detect biological signatures invisible to other species. Both parties are aware of this. Neither has made it an issue.');
+set('Enathi','Formicides',3,'Formicide chemical-gradient sensing extends into ranges active camouflage does not cover. A known parameter, not a conflict.');
+set('Enathi','Kaluarga',3,'Whether Kaluarga can detect active Enathi through harmonic field reading is uncharacterized. Neither party has pressed the question.');
+set('Enathi','Lumifloofs',2,'Lumifloof empathic channel reads active emotional state regardless of visual camouflage. A meaningful operational limitation for Enathi in clandestine contexts.');
+set('Enathi','Quorreni',3,'Quorreni spatial navigation functions without visual input — camouflage provides no cover against it. Both species operate in similar environments. Professional acknowledgment.');
+set('Enathi','Rethani',3,'Rethani passive visual field is wide but camouflage still effective. Standard dynamic.');
+set('Enathi','Undrel',3,'Undrel bioluminescent tendril tips provide passive illumination in exactly the conditions Enathi camouflage performs best. Noted.');
+set('Formicides','Human',3,'Human behavioral tempo reads as non-threatening to Formicide pattern recognition. Functional working relationship. Humans misread Formicide tempo as agitation; this is not corrected.');
+set('Formicides','Gorrauth',3,'Both direct-communication species with non-standard body plans. Less friction than expected. Mutual appreciation for commitment weight and predictability.');
+set('Formicides','Vaylon',2,'Vaylon status hierarchy does not map cleanly onto caste structure. Neither side fully reads the other\'s signaling system. Persistent low-level diplomatic friction.');
+set('Formicides','Pelhari',3,'Pelhari mediator function works across species lines including Formicides, though calibration for multi-channel Formicide communication requires specialist training.');
+set('Formicides','Memnos',3,'Memnos anti-grav movement registers to Formicide vibration sensing as absent — no substrate contact. Both parties adapted. Neutral.');
+set('Formicides','Kaluarga',3,'Kaluarga harmonic sensitivity registers Formicide Substrate resonance link as something adjacent to their own. Mild cross-species interest; not developed institutionally.');
+set('Formicides','Lumifloofs',3,'Lumifloof empathic channel handles Formicide caste-weighted cognition differently than individual emitters. Both parties report the interaction as unusual. Neutral-positive.');
+set('Formicides','Quorreni',3,'Quorreni underground navigation and Formicide structural-load pathfinding are different adaptations to similar problems. Occasional operational collaboration in subterranean contexts.');
+set('Formicides','Rethani',4,'Rethani in logistics roles interact with Formicide supply chains extensively. The relationship is load-bearing in Continuum infrastructure.');
+set('Formicides','Undrel',3,'Undrel artifact recovery and Formicide resource logistics have overlapping interests in derelict sites. Functional with intermittent provenance disputes.');
+set('Gorrauth','Human',5,'Consistently the strongest cross-species working relationship in documented records. Human directness norms align closely with Gorrauth values. Mutual respect is genuine and well-documented.');
+set('Gorrauth','Vaylon',1,'Fundamental incompatibility between Gorrauth directness and Vaylon multi-channel status signaling. Documented diplomatic incidents on record.');
+set('Gorrauth','Pelhari',1,'A Pelhari and a Gorrauth in the same negotiation room is a documented source of extended procedural difficulty. Deep communication incompatibility.');
+set('Gorrauth','Memnos',4,'Memnos commitment durability aligns with Gorrauth values. When a Memnos says something, it means the thing. Long positive interaction record.');
+set('Gorrauth','Kaluarga',3,'Gorrauth physical surplus in standard gravity is sometimes misread by Kaluarga as threat display. No actual conflict. Functional.');
+set('Gorrauth','Lumifloofs',3,'Lumifloof empathic reception handles Gorrauth\'s extremely direct emotional output easily. Gorrauth find Lumifloofs\' non-verbal style unusual but not frustrating.');
+set('Gorrauth','Quorreni',4,'Both species value economy of expression and reliable performance over social signaling. Strong mutual operational respect.');
+set('Gorrauth','Rethani',4,'Complementary capabilities, similar communication registers. Rethani logistics and Gorrauth engineering make a consistently good pairing.');
+set('Gorrauth','Undrel',3,'Gorrauth find Undrel object-examination reflex mildly irritating. Undrel find Gorrauth technical work fascinating. Functional. The irritation is manageable.');
+set('Human','Vaylon',3,'Humans miss most of Vaylon\'s multi-channel signaling. Vaylon find this simultaneously frustrating and diplomatically useful. Functional with effort.');
+set('Human','Pelhari',4,'Pelhari find humans relatively legible by cross-species standards. Human intent reads clearly enough. Good institutional relationship.');
+set('Human','Memnos',4,'Human tech iteration speed and Memnos long-cycle strategic patience are complementary. Joint projects trend toward successful outcomes.');
+set('Human','Kaluarga',4,'Human mathematical Substrate derivation and Kaluarga harmonic Substrate sensitivity converge on the same phenomena differently. Strong scientific collaboration record.');
+set('Human','Lumifloofs',4,'Lumifloofs read human emotional states easily and reliably. Working relationships are consistently positive.');
+set('Human','Quorreni',4,'Human exploratory drive and Quorreni enclosed-environment capability make a strong field pairing. Mutual respect.');
+set('Human','Rethani',4,'Humans in transit and exploration roles depend heavily on Rethani logistics. The relationship is functional and warm in extended contact.');
+set('Human','Undrel',5,'Strong mutual affinity. Both high risk-tolerance, exploratory species with complementary field behavior. Consistent positive contact record across frontier contexts.');
+set('Kaluarga','Vaylon',3,'Vaylon status hierarchy is legible to Kaluarga harmonic sensitivity as a structured field. The reading is interesting rather than uncomfortable.');
+set('Kaluarga','Pelhari',5,'The two species most represented in Continuum mediation and harmonics work. Deeply complementary capabilities. Strong institutional partnership.');
+set('Kaluarga','Memnos',3,'Kaluarga Substrate sensitivity finds no signal from Memnos chassis. Reported as an unusual absence rather than a problem. Both parties adapted.');
+set('Kaluarga','Lumifloofs',4,'Lumifloof empathic output and Kaluarga harmonic reception operate on adjacent channels. Pleasant for both. Strong affective compatibility.');
+set('Kaluarga','Quorreni',3,'Quorreni poison spur interaction with Pelhari emotional deregulation is known to Kaluarga medical staff. No direct Kaluarga-Quorreni tension. Functional.');
+set('Kaluarga','Rethani',3,'Standard Continuum species interaction. No friction, no particular affinity documented.');
+set('Kaluarga','Undrel',3,'Undrel Substrate-adjacent artifact handling sometimes produces readings in Kaluarga present in the same space. Undrel find this interesting.');
+set('Lumifloofs','Vaylon',3,'Lumifloof bioluminescent output does not register in Vaylon extended chromatic range as social signaling — the systems are not compatible. Neutral-positive.');
+set('Lumifloofs','Pelhari',4,'Lumifloof empathic channel reads Pelhari near-flat biological expression as emotionally present but very quiet. Pelhari find Lumifloof affect transparent and unthreatening.');
+set('Lumifloofs','Memnos',3,'Lumifloof empathic reception returns nothing from Memnos chassis. The most complete emotional absence the channel encounters. Some Lumifloofs find it restful.');
+set('Lumifloofs','Quorreni',3,'Quorreni poison spur euphoric effect on humanoid species includes Lumifloofs. Noted in Lumifloof medical records. No conflict.');
+set('Lumifloofs','Rethani',3,'Standard positive baseline. Rethani find Lumifloof bioluminescent communication visually trackable in their wide field.');
+set('Lumifloofs','Undrel',4,'Lumifloof empathic sensitivity and Undrel curiosity-first orientation produce consistently warm interactions.');
+set('Memnos','Vaylon',3,'Neither reads the other\'s expressive output fully. Institutional interactions functional.');
+set('Memnos','Pelhari',4,'Shared orientation toward long-cycle institutional thinking and durable commitments. Strong institutional overlap.');
+set('Memnos','Quorreni',3,'No documented friction. Both species are self-contained and economical. Functional.');
+set('Memnos','Rethani',3,'Memnos anti-grav movement is unusual in Rethani logistics environments. Rethani adapted. Functional.');
+set('Memnos','Undrel',3,'Undrel object-examination reflex extends to Memnos chassis components and display patterns. Memnos receive this with measured patience.');
+set('Pelhari','Vaylon',2,'Pelhari receive only partial Vaylon multi-channel signal. Vaylon find this diplomatically limiting. Perceptual gap creates friction despite mutual institutional respect.');
+set('Pelhari','Quorreni',1,'Quorreni male venom spur interaction causes prolonged Pelhari emotional deregulation. The Pelhari diplomatic establishment is aware. Not widely publicized. Significant documented concern.');
+set('Pelhari','Rethani',4,'Pelhari in mediation roles and Rethani in logistics roles interact extensively at Continuum nodes. Complementary functions; mutual professional respect.');
+set('Pelhari','Undrel',3,'Pelhari mediation services retained for Undrel provenance disputes. Professional relationship. Pelhari find Undrel intent legible; Undrel find Pelhari useful and slightly opaque.');
+set('Quorreni','Vaylon',3,'Vaylon status hierarchy does not map onto Quorreni independent social structure. Neutral interaction.');
+set('Quorreni','Rethani',4,'Quorreni underground and enclosed-environment capability complements Rethani surface logistics. Positive operational overlap.');
+set('Quorreni','Undrel',5,'Strong mutual respect between two species defined by capability in environments others avoid. An exceptionally effective derelict-operations pairing.');
+set('Rethani','Vaylon',3,'Rethani in logistics roles process Vaylon protocol overhead as part of the job. No particular friction; no particular affinity.');
+set('Rethani','Undrel',4,'Rethani wide-field awareness and Undrel object-interest make a functional pairing in salvage-adjacent transit contexts.');
+set('Undrel','Vaylon',2,'Vaylon provenance expectations and Undrel documentation practices are in persistent tension. Artifact recovery disputes are a documented category of friction.');
+
+const scoreClass={5:'r5',4:'r4',3:'r3',2:'r2',1:'r1',0:'rX','-1':'self'};
+const scoreLabel={5:'●●',4:'●',3:'–',2:'▲',1:'✕',0:'?','-1':''};
+const scoreNames={5:'STRONG POSITIVE',4:'POSITIVE',3:'NEUTRAL',2:'FRICTION',1:'TENSION',0:'UNCHARACTERIZED'};
+
+function getScore(a,b){ if(a===b)return -1; const k=key(a,b); return rel[k]?rel[k].score:0; }
+function getNote(a,b){ if(a===b)return null; const k=key(a,b); return rel[k]?rel[k].note:'Contact uncharacterized or insufficiently documented in available records.'; }
+
+function buildMatrix(highlight){
+  const tbl=document.getElementById('matrix');
+  tbl.innerHTML='';
+  const header=document.createElement('tr');
+  header.appendChild(document.createElement('th'));
+  S.forEach(s=>{
+    const th=document.createElement('th');
+    th.className='col-label';
+    th.textContent=s;
+    if(highlight&&s!==highlight)th.style.opacity='0.2';
+    header.appendChild(th);
+  });
+  tbl.appendChild(header);
+  S.forEach(rowS=>{
+    const tr=document.createElement('tr');
+    const th=document.createElement('th');
+    th.className='row-label';
+    th.textContent=rowS;
+    if(highlight&&rowS!==highlight)th.style.opacity='0.2';
+    tr.appendChild(th);
+    S.forEach(colS=>{
+      const td=document.createElement('td');
+      const score=getScore(rowS,colS);
+      td.className='cell '+(score===-1?'self':scoreClass[score]);
+      td.textContent=score===-1?'':scoreLabel[score];
+      if(highlight&&rowS!==highlight&&colS!==highlight)td.style.opacity='0.1';
+      td.addEventListener('mouseenter',e=>showTT(e,rowS,colS,score));
+      td.addEventListener('mouseleave',hideTT);
+      tr.appendChild(td);
+    });
+    tbl.appendChild(tr);
+  });
+}
+
+const tt=document.getElementById('tooltip');
+
+function showTT(e,a,b,score){
+  if(a===b)return;
+  const note=getNote(a,b);
+  const sname=score>0?scoreNames[score]:'UNCHARACTERIZED';
+  tt.innerHTML=`<span class="tt-head">${a.toUpperCase()} // ${b.toUpperCase()}</span>${note}<div class="tt-score">STATUS: ${sname}</div>`;
+  tt.style.display='block';
+
+  const MARGIN=12;
+  const TT_W=260;
+  const TT_H=tt.offsetHeight||120;
+  const vw=window.innerWidth;
+  const vh=window.innerHeight;
+  const cx=e.clientX;
+  const cy=e.clientY;
+
+  let left=cx+MARGIN;
+  if(left+TT_W>vw-MARGIN) left=cx-TT_W-MARGIN;
+
+  let top=cy+MARGIN;
+  if(top+TT_H>vh-MARGIN) top=cy-TT_H-MARGIN;
+
+  tt.style.left=left+'px';
+  tt.style.top=top+'px';
+}
+
+function hideTT(){ tt.style.display='none'; }
+
+let activeHL=null;
+const pillContainer=document.getElementById('pills');
+S.forEach(s=>{
+  const btn=document.createElement('button');
+  btn.className='pill';
+  btn.textContent=s;
+  btn.addEventListener('click',()=>{
+    if(activeHL===s){ activeHL=null; document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); }
+    else{ activeHL=s; document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); btn.classList.add('active'); }
+    buildMatrix(activeHL);
+  });
+  pillContainer.appendChild(btn);
+});
+
+buildMatrix(null);
+</script>
