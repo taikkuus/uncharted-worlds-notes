@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARRIVAL // SESSION 03 RECAP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #33ff66;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 32px 16px;
+  }
+
+  .terminal {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  /* ── BOOT HEADER ─────────────────────────────────────── */
+  .boot-header {
+    border: 1px solid #1a4a28;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    background: #050e08;
+  }
+  .boot-header .sys-line {
+    color: #1e8c3a;
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+  .boot-header .title {
+    color: #33ff66;
+    font-size: 22px;
+    letter-spacing: 4px;
+    margin: 8px 0 4px;
+  }
+  .boot-header .subtitle {
+    color: #1e8c3a;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+  .boot-header .blink {
+    animation: blink 1.2s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── SECTION BLOCKS ──────────────────────────────────── */
+  .section {
+    border: 1px solid #1a4a28;
+    margin-bottom: 20px;
+    background: #050e08;
+  }
+  .section-header {
+    background: #0e2a18;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #1a4a28;
+  }
+  .section-header .tag {
+    color: #1e8c3a;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  .section-header .label {
+    color: #33ff66;
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+  .section-body {
+    padding: 16px 20px;
+  }
+
+  /* ── TIMELINE ────────────────────────────────────────── */
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0 16px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed #0d2a18;
+  }
+  .timeline-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .tl-time {
+    color: #1e8c3a;
+    font-size: 12px;
+    padding-top: 2px;
+  }
+  .tl-event { color: #ccffdd; }
+  .tl-event strong { color: #33ff66; }
+
+  /* ── STATUS TABLE ────────────────────────────────────── */
+  .status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 560px) { .status-grid { grid-template-columns: 1fr; } }
+
+  .status-card {
+    border: 1px solid #1a4a28;
+    padding: 10px 14px;
+    background: #03090a;
+  }
+  .status-card .sc-name {
+    color: #33ff66;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .status-card .sc-status {
+    font-size: 12px;
+    color: #ccffdd;
+  }
+  .status-card .sc-status.warn { color: #ffcc44; }
+  .status-card .sc-status.crit { color: #ff4444; }
+  .status-card .sc-status.ok   { color: #33ff66; }
+
+  /* ── INTEL / BULLET LISTS ────────────────────────────── */
+  .intel-list {
+    list-style: none;
+    padding: 0;
+  }
+  .intel-list li {
+    padding: 4px 0 4px 18px;
+    position: relative;
+    color: #ccffdd;
+    border-bottom: 1px dashed #0d2a18;
+    font-size: 13px;
+  }
+  .intel-list li:last-child { border-bottom: none; }
+  .intel-list li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #1e8c3a;
+  }
+  .intel-list li strong { color: #33ff66; }
+
+  /* ── ADVANCEMENT TABLE ───────────────────────────────── */
+  .adv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .adv-table th {
+    background: #0e2a18;
+    color: #1e8c3a;
+    padding: 6px 12px;
+    text-align: left;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #1a4a28;
+  }
+  .adv-table td {
+    padding: 7px 12px;
+    color: #ccffdd;
+    border-bottom: 1px dashed #0d2a18;
+    vertical-align: top;
+  }
+  .adv-table tr:last-child td { border-bottom: none; }
+  .adv-table td:first-child { color: #33ff66; white-space: nowrap; }
+
+  /* ── QUOTE / FLAVOR ──────────────────────────────────── */
+  .flavor-block {
+    border-left: 3px solid #1e8c3a;
+    padding: 10px 16px;
+    background: #03090a;
+    margin: 12px 0;
+    color: #99ddbb;
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  /* ── MISSION STATUS BANNER ───────────────────────────── */
+  .mission-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #0e2a18;
+    border: 1px solid #33ff66;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .mission-banner .mb-label { color: #1e8c3a; font-size: 11px; letter-spacing: 2px; }
+  .mission-banner .mb-value { color: #33ff66; font-size: 13px; }
+  .mission-banner .mb-value.resolved { color: #33ff66; }
+  .mission-banner .mb-value.active   { color: #ffcc44; }
+
+  /* ── FOOTER ──────────────────────────────────────────── */
+  .footer {
+    text-align: center;
+    color: #1e8c3a;
+    font-size: 11px;
+    padding-top: 20px;
+    letter-spacing: 1px;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid #1a4a28;
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+<div class="terminal">
+
+  <!-- BOOT HEADER -->
+  <div class="boot-header">
+    <div class="sys-line">TAW-CVS LOVELACE // CREW INTERFACE v4.1 // MISSION LOG</div>
+    <div class="sys-line">VERATH STATION — RING TRANSIT ZONE / BERTH ROW 7-KOVA</div>
+    <div class="title">SESSION 03</div>
+    <div class="subtitle">KNOT UNDONE &nbsp;▸&nbsp; RECOVERY &amp; EXTRACTION<span class="blink">_</span></div>
+  </div>
+
+  <!-- MISSION STATUS BANNER -->
+  <div class="mission-banner">
+    <div>
+      <div class="mb-label">TIME REMAINING (VOTE)</div>
+      <div class="mb-value active">~5 HRS AT SESSION OPEN → VOTE PASSED BY SESSION END</div>
+    </div>
+    <div>
+      <div class="mb-label">MISSION STATUS</div>
+      <div class="mb-value resolved">KNOT UNDONE — RESOLVED</div>
+    </div>
+    <div>
+      <div class="mb-label">VETHIS KNOT</div>
+      <div class="mb-value resolved">REUNITED / VOTE CAST</div>
+    </div>
+  </div>
+
+  <!-- SECTION: RECAP & CONTEXT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[01]</span>
+      <span class="label">SESSION OPEN — WHERE WE LEFT OFF</span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">SESSION START</div>
+        <div class="tl-event">The crew is aboard the <strong>Lovelace</strong>, recovering from a disastrous run at Perihelion last session. <strong>Elias</strong> is just regaining consciousness. Eight hours of the original 14-hour window were burned on treatment and escape. <strong>~5 hours remain</strong> before the Continuum corridor funding vote.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ABOARD SHIP</div>
+        <div class="tl-event"><strong>Vethis-Char</strong> — one component of the Ammonadda diplomatic knot — is in the Lovelace medbay in a solo-feral state. The other two components, <strong>Vethis-Prenn</strong> and <strong>Vethis-Aun</strong>, are unaccounted for but presumed held at Berth Row 7-Kova.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ADVANCEMENTS</div>
+        <div class="tl-event">Before departing, the crew tallies <strong>4 advancement triggers</strong> from last session and spends experience on new skills. <strong>K'thlx-kek</strong> acquires <em>Clairvoyance</em> and immediately puts it to use.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: KETH DEBRIEF -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[02]</span>
+      <span class="label">KETH AULRIC — FULL DISCLOSURE</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Keth Aulric requests permission to board. Neyla meets her at the airlock and brings her to the conference room.
+        Keth admits she has been withholding information and chooses to start fresh.
+      </p>
+      <div class="flavor-block">
+        "I've not been completely forthcoming with you. I was protecting your three — but I thought it might complicate your decision to help. That was a mistake. It was also me not completely trusting you. I'm certain now."
+      </div>
+      <ul class="intel-list" style="margin-top:12px;">
+        <li>Eleven days ago, the Continuum scheduled a vote on <strong>maintenance funding for corridor transit nodes</strong> — two nodes servicing significant bottom-out-of-frame movement, both overdue.</li>
+        <li>As an Ammonadda, Vethis is a registered triple-net diplomatic entity. Continuum quorum rules require physical presence to cast a vote. A separated knot cannot vote.</li>
+        <li>The opposition is the <strong>Tharven Sectoral Compact (TSC)</strong> — three sector reps with commercial interests in the Great Plains infrastructure corridor. The two projects compete for the same maintenance cycle budget.</li>
+        <li>This is not ideological. <strong>It is a budget competition</strong>. One side chose to remove the vote rather than win it.</li>
+        <li>Keth has tracked the political alignment for three months. She suspects TSC representatives but has no direct evidence yet. She will not name them without it.</li>
+        <li>She has identified a shell company: <strong>VOVREN FREIGHT</strong>, registered under a Tharven commercial proxy. Someone is layering themselves behind it.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION: CLAIRVOYANCE SCOUT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[03]</span>
+      <span class="label">PSYCHIC RECONNAISSANCE — K'THLX-KEK</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        K'thlx-kek uses newly acquired <em>Clairvoyance</em> to attempt an assessment of <strong>Vethis-Prenn</strong> before the crew moves out.
+      </p>
+      <div class="flavor-block">
+        Vision from Prenn's point of view: darkness, a small cramped space. Two heartbeats close together. Loud machinery outside — welders, forklifts. The container is not sealed for environment — faint light bleeds through a seam.
+      </div>
+      <ul class="intel-list" style="margin-top:12px;">
+        <li>Confirms both Prenn and Aun are likely together in a <strong>sealed container</strong> in an industrial environment.</li>
+        <li>Machinery noise is consistent with a <strong>working berth or cargo dock</strong>.</li>
+        <li>A data point is earned — useful if the crew has to interact with whatever is in that container later.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION: BERTH ROW 7-KOVA -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[04]</span>
+      <span class="label">BERTH ROW 7-KOVA — INFILTRATION</span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">TRANSIT</div>
+        <div class="tl-event">The crew takes public transit to Berth Row 7-Kova. The berth entrance requires key-card access. <strong>Neyla hacks it</strong> with a partial success — they get in, but whoever is inside is now aware of the breach.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">INSIDE THE BERTH</div>
+        <div class="tl-event">A large working cargo bay: customs terminals, crates, a central forklift lane, four shielded doors. A <strong>Quorreni crane operator (Veth)</strong> watches from an enclosed operator station. A deep, croaking voice comes over the PA ordering them to leave. <strong>A Vovren Freight hauler</strong> is docked in the bay — the ship matches the registry from the shell company.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ESCALATION</div>
+        <div class="tl-event">K'thlx-kek uses <em>Command</em> to compel Veth to go on break, removing the crane operator from play. The unseen hostile — <strong>Ossin, a Gorrauth dock lieutenant</strong> — orders a squad of mechs deployed, including one heavy mech with a power fist and shoulder mount. Combat begins.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: COMBAT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[05]</span>
+      <span class="label">COMBAT — BERTH 7-KOVA</span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">ROUND 1</div>
+        <div class="tl-event"><strong>Kepler</strong> throws a concussive grenade — partial success. Light mechs are sensor-compromised and damaged but not destroyed. <strong>Neyla</strong> deploys her AI to invade the heavy mech, partially hijacking it. It turns and cuts the light mechs in half with its laser — then the laser fails to shut off, cutting a groove across the bay floor and destroying several crates (blue hydraulic fluid sprays out). Elias confirms the blue goo is not biological.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">VACUUM EVENT</div>
+        <div class="tl-event"><strong>Ossin</strong> — in an EVA suit with magnetic boots on the upper level — deactivates the bay's external force field. Air begins evacuating. The crew grabs onto whatever they can. <strong>Mara</strong> loses her grip and is sucked toward open space, catching the top of a glass panel by her fingertips.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">RESCUE</div>
+        <div class="tl-event"><strong>K'thlx-kek</strong> flies out into the evacuating air, catches Mara, and gets her back to the interior side of the force field generator — but something important is lost in the process. <strong>Mara loses her pinky finger</strong>, caught in the force field generator on the way through. <strong>Kepler</strong> finds an emergency panel and hits the big red button, restoring the force field and stopping the evacuation.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CLOSE COMBAT</div>
+        <div class="tl-event">Bulkhead doors open. Ossin descends and engages with his multi-tool, a large improvised wrench. <strong>Mara</strong> — bleeding, cradling her injured hand — tries to raise a barrier but is a half-second too slow, taking a <strong>major laceration on her head</strong>. K'thlx-kek's staff arcs electricity, electrifying Ossin's multi-tool and disarming him. <strong>Elias</strong> takes a shot on Ossin — partial success — dropping him but triggering a detonation countdown from the heavy mech's neck unit.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">MECH DETONATION</div>
+        <div class="tl-event">Mara encases the mech in a barrier just in time. Bright flash. Muffled explosion. <strong>The barrier holds.</strong> Large scorch marks and smoke. The mech is gone.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: EXTRACTION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[06]</span>
+      <span class="label">EXTRACTION — VETHIS FOUND</span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">TERMINAL SEARCH</div>
+        <div class="tl-event">Elias accesses a terminal inside the bay. A search for "live cargo" locates a specific container — <strong>Package 32D</strong>. The box is opened with lockpicks and a crowbar. Inside: <strong>Vethis-Prenn and Vethis-Aun</strong>, both alive. No recognition in their eyes — calm but unresponsive. Not feral, but clearly deteriorating from 36+ hours as an incomplete knot.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">OSSIN DETAINED</div>
+        <div class="tl-event">Ossin is identified by his ID badge — <em>Ossin, Bunk Room 3</em>. The crew restrains him with improvised zip-ties and has K'thlx-kek's assistants escort him back to the ship. He is stunned, sourly cooperative, and says nothing useful.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">RETURN TO LOVELACE</div>
+        <div class="tl-event">Travel time: roughly one hour. The crew returns to the Lovelace medbay and reunites all three Vethis components with <strong>Vethis-Char</strong>, who is already aboard. Near-instant partial reintegration. The first coherent words out of the reconstituted knot: <strong>"Doveth Karrun."</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: RESOLUTION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[07]</span>
+      <span class="label">RESOLUTION — THE VOTE</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Keth Aulric is contacted immediately. She boards with Sorel Vev and armed guards — Sorel's chromatophores scintillating with unrestrained joy.
+        Vethis is escorted to the Continuum chambers with approximately three hours to spare.
+      </p>
+      <div class="flavor-block">
+        The maintenance funding allocation passes by a single vote. The corridor transit nodes will receive their overdue maintenance. The Tharven Sectoral Compact's bid fails.
+      </div>
+      <p style="color:#ccffdd; font-size:13px; margin-top:14px;">
+        Vethis — speaking through <strong>Prenn</strong> — thanks the crew personally. They ask the crew to continue: find those responsible and help bring them to justice.
+        The vote is won. The knot is intact. <strong>Doveth Karrun</strong> is named.
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION: CREW STATUS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[08]</span>
+      <span class="label">CREW STATUS — END OF SESSION</span>
+    </div>
+    <div class="section-body">
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="sc-name">CLIFTON POOLE</div>
+          <div class="sc-status ok">No injuries logged this session</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">ELIAS CORVALLIN</div>
+          <div class="sc-status warn">Major injury — shoulder (hit by multi-tool wrench). Prior stun injuries cleared after rest.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">KEPLER</div>
+          <div class="sc-status ok">No injuries. Addict stat confirmed active (Metal +1 when drinking).</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">MARA WEBB</div>
+          <div class="sc-status crit">Major laceration (head) + permanent loss of left pinky finger.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">NEYLA LUNEXA</div>
+          <div class="sc-status ok">No injuries. New skill: Clairvoyance (used and effective).</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">REP. K'THLX-KEK</div>
+          <div class="sc-status ok">No injuries. Psychic advancement — Clairvoyance acquired.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: ADVANCEMENT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[09]</span>
+      <span class="label">ADVANCEMENT — SESSION 02 TRIGGERS RESOLVED</span>
+    </div>
+    <div class="section-body">
+      <table class="adv-table">
+        <thead>
+          <tr>
+            <th>TRIGGER</th>
+            <th>SOURCE</th>
+            <th>NOTES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>System security was breached</td>
+            <td>Any</td>
+            <td>Perihelion infiltration, Session 02</td>
+          </tr>
+          <tr>
+            <td>A limitation was reached</td>
+            <td>Any</td>
+            <td>Elias rendered unconscious</td>
+          </tr>
+          <tr>
+            <td>An act was performed covertly</td>
+            <td>Any</td>
+            <td>Confirmed by Mara</td>
+          </tr>
+          <tr>
+            <td>An unwilling pawn was compelled</td>
+            <td>K'thlx-kek</td>
+            <td>Compelled Perihelion security to leave</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="color:#1e8c3a; font-size:12px; margin-top:12px;">4 TRIGGERS TOTAL → 4 EXPERIENCE AWARDED TO ALL CREW</p>
+    </div>
+  </div>
+
+  <!-- SECTION: OPEN THREADS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[10]</span>
+      <span class="label">OPEN THREADS — HEADING INTO SESSION 04</span>
+    </div>
+    <div class="section-body">
+      <ul class="intel-list">
+        <li><strong>DOVETH KARRUN</strong> — TSC sector representative. Named by Vethis immediately upon partial reintegration. No direct evidence yet. Suspect confirmed.</li>
+        <li><strong>VOVREN FREIGHT</strong> — Shell company. Tharven commercial proxy. The hauler at Berth 7-Kova was registered under this entity. Coldwall Holdings linked as operational arm.</li>
+        <li><strong>OSSIN</strong> — Gorrauth dock lieutenant, now in custody aboard the Lovelace. Bunk Room 3 affiliation. Potential source of operational intel on the chain of command.</li>
+        <li><strong>VETHIS</strong> — Conscious and recovering. Confirmed they can speak to the crew after the vote. Interrogation / testimony session pending.</li>
+        <li><strong>COLDWALL HOLDINGS</strong> — Director <strong>Pahven Rusk</strong> still at large. Coldwall was the operational contractor. Third Vethis component was recovered from their area of operation; the chain leads back here.</li>
+        <li><strong>NODE 7V</strong> — The Lovelace's own handshake signal returned with a 25-year-old timestamp and no corresponding log entry. This thread remains untouched. Either the log was scrubbed — or the event hasn't happened yet.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="footer">
+    TAW-CVS LOVELACE // MISSION LOG // SESSION 03 // END OF RECORD<br>
+    GALACTIC CONTINUUM — VERATH STATION — RING SECTOR 7
+  </div>
+
+</div>
+</body>
+</html>
