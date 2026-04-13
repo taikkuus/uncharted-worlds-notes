@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARRIVAL // SESSION 04 RECAP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #33ff66;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 32px 16px;
+  }
+
+  .terminal { max-width: 820px; margin: 0 auto; }
+
+  .boot-header {
+    border: 1px solid #1a4a28;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    background: #050e08;
+  }
+  .boot-header .sys-line { color: #1e8c3a; font-size: 12px; margin-bottom: 2px; }
+  .boot-header .title { color: #33ff66; font-size: 22px; letter-spacing: 4px; margin: 8px 0 4px; }
+  .boot-header .subtitle { color: #1e8c3a; font-size: 12px; letter-spacing: 2px; }
+  .boot-header .blink { animation: blink 1.2s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .section { border: 1px solid #1a4a28; margin-bottom: 20px; background: #050e08; }
+  .section-header {
+    background: #0e2a18; padding: 8px 16px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid #1a4a28;
+  }
+  .section-header .tag { color: #1e8c3a; font-size: 11px; letter-spacing: 1px; }
+  .section-header .label { color: #33ff66; font-size: 13px; letter-spacing: 2px; }
+  .section-body { padding: 16px 20px; }
+
+  .timeline-item {
+    display: grid; grid-template-columns: 120px 1fr; gap: 0 16px;
+    margin-bottom: 16px; padding-bottom: 16px;
+    border-bottom: 1px dashed #0d2a18;
+  }
+  .timeline-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .tl-time { color: #1e8c3a; font-size: 12px; padding-top: 2px; }
+  .tl-event { color: #ccffdd; }
+  .tl-event strong { color: #33ff66; }
+
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .status-grid { grid-template-columns: 1fr; } }
+  .status-card { border: 1px solid #1a4a28; padding: 10px 14px; background: #03090a; }
+  .status-card .sc-name { color: #33ff66; font-size: 12px; letter-spacing: 1px; margin-bottom: 4px; }
+  .status-card .sc-status { font-size: 12px; color: #ccffdd; }
+  .status-card .sc-status.warn { color: #ffcc44; }
+  .status-card .sc-status.crit { color: #ff4444; }
+  .status-card .sc-status.ok   { color: #33ff66; }
+
+  .intel-list { list-style: none; padding: 0; }
+  .intel-list li {
+    padding: 4px 0 4px 18px; position: relative;
+    color: #ccffdd; border-bottom: 1px dashed #0d2a18; font-size: 13px;
+  }
+  .intel-list li:last-child { border-bottom: none; }
+  .intel-list li::before { content: "▸"; position: absolute; left: 0; color: #1e8c3a; }
+  .intel-list li strong { color: #33ff66; }
+
+  .adv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .adv-table th {
+    background: #0e2a18; color: #1e8c3a; padding: 6px 12px;
+    text-align: left; letter-spacing: 1px; border-bottom: 1px solid #1a4a28;
+  }
+  .adv-table td {
+    padding: 7px 12px; color: #ccffdd;
+    border-bottom: 1px dashed #0d2a18; vertical-align: top;
+  }
+  .adv-table tr:last-child td { border-bottom: none; }
+  .adv-table td:first-child { color: #33ff66; white-space: nowrap; }
+
+  .flavor-block {
+    border-left: 3px solid #1e8c3a; padding: 10px 16px;
+    background: #03090a; margin: 12px 0;
+    color: #99ddbb; font-size: 13px; font-style: italic;
+  }
+
+  .mission-banner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px; background: #0e2a18;
+    border: 1px solid #33ff66; margin-bottom: 28px;
+    flex-wrap: wrap; gap: 8px;
+  }
+  .mission-banner .mb-label { color: #1e8c3a; font-size: 11px; letter-spacing: 2px; }
+  .mission-banner .mb-value { color: #33ff66; font-size: 13px; }
+  .mission-banner .mb-value.active { color: #ffcc44; }
+  .mission-banner .mb-value.resolved { color: #33ff66; }
+
+  .footer { text-align: center; color: #1e8c3a; font-size: 11px; padding-top: 20px; letter-spacing: 1px; }
+  .divider { border: none; border-top: 1px solid #1a4a28; margin: 20px 0; }
+</style>
+</head>
+<body>
+<div class="terminal">
+
+  <div class="boot-header">
+    <div class="sys-line">TAW-CVS LOVELACE // CREW INTERFACE v4.1 // MISSION LOG</div>
+    <div class="sys-line">VERATH STATION — SECTOR 379 / COLDWALL HOLDINGS DISTRICT</div>
+    <div class="title">SESSION 04</div>
+    <div class="subtitle">KNOT UNDONE — RESOLUTION &nbsp;▸&nbsp; NEW ORDERS<span class="blink">_</span></div>
+  </div>
+
+  <div class="mission-banner">
+    <div>
+      <div class="mb-label">KNOT UNDONE</div>
+      <div class="mb-value resolved">CLOSED — DOVETH KARRUN NAMED &amp; EVIDENCE DELIVERED</div>
+    </div>
+    <div>
+      <div class="mb-label">NEW MISSION</div>
+      <div class="mb-value active">THE LONG CARRY — TRANSPORT OUEIKARU TO THESSAVAR</div>
+    </div>
+  </div>
+
+  <!-- DOWNTIME VIGNETTES -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[01]</span>
+      <span class="label">DOWNTIME — RECOVERY &amp; REFLECTION</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        The session opens with individual crew vignettes covering the eight-hour recovery period following the vote. The GM goes around the table.
+      </p>
+      <div class="timeline-item">
+        <div class="tl-time">KEPLER</div>
+        <div class="tl-event">Missed the strip club entirely. Spent the night on a beer and drug run. Heard about Perihelion after the fact. Said he missed out on some good people working that night.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CLIFTON</div>
+        <div class="tl-event">Watching Vethis-Char come out of the recycler feral triggered a memory from his training at the School — the boogeyman story they used to recruit psionic candidates. He'd never actually seen someone snap like that. The story was always abstract until now.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ELIAS</div>
+        <div class="tl-event">Eight hours unconscious. Nightmares interwoven with the injury and something deeper — a felt sense of what it was like for Vethis-Char to be separated from the knot. The injury dreams and the isolation dreams merged. The result was worse than either alone.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">K'THLX-KEK</div>
+        <div class="tl-event">Reflects on using compulsion abilities. Formicide diplomats may be inherently predisposed to psychic influence as a cultural role — a biological analogue to colony-level specialization. Uses it against threats without much hesitation. Has stricter lines around using it against allies.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">MARA</div>
+        <div class="tl-event">Rough couple of weeks. Missing pinky, recurring shoulder injury, repeated equipment failures under pressure. Spent time in the cargo bay with Kepler, ruminating. Not sure she's making the right choices. Actively thinking about getting the finger regrown when the opportunity comes.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">NEYLA</div>
+        <div class="tl-event">Was essentially hired to resolve a budget dispute that nearly got the whole crew killed. Invested now — wants to understand the full chain and close it properly. Risk-taking that shows up in the cockpit appears to carry over into the field.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERROGATION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[02]</span>
+      <span class="label">INTERROGATION — OSSIN</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        <strong>Ossin</strong> — the Gorrauth dock lieutenant captured at Berth 7-Kova — is restrained in the Lovelace medbay. K'thlx-kek leads the interrogation. Elias provides atmosphere by sourcing the largest syringe in the medbay and fidgeting with it in the background.
+      </p>
+      <div class="flavor-block">
+        "I was just doing what I was told to do. I was told it shouldn't be found and that no harm should come to them. That's what I did. That's what I tried to do."
+      </div>
+      <ul class="intel-list" style="margin-top:12px;">
+        <li>Person in charge: <strong>Feln Drevva</strong>. The name matches the partial from the Perihelion security footage — confirmed same individual.</li>
+        <li>Ossin was contracted to keep the crate from being discovered — not to harm the diplomats. He claims he has never killed anyone in his life. The crew is skeptical; he did attempt to depressurize the bay.</li>
+        <li>Ossin has a family — wife and children. He does not know the full chain above Feln. His information stops there.</li>
+        <li>Decision: <strong>keep Ossin confined aboard the Lovelace</strong> — useful as a potential witness and asset, not safe to release (he'd report back). Not killed. Eventually released with a strongly worded understanding.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- RESEARCH -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[03]</span>
+      <span class="label">RESEARCH — FELN DREVVA &amp; COLDWALL HOLDINGS</span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">NETWORK SEARCH</div>
+        <div class="tl-event">Neyla accesses the station's public data network — partial success, not stealthy. Someone monitoring the data load would know someone is asking questions. Research confirms: <strong>Feln Drevva</strong> has ties to <strong>Coldwall Holdings</strong>, a security company headquartered in Sector 379. Vovren Freight exists mostly on paper — ships registered, no real officers or court filings findable. Coldwall Holdings is the operational avenue worth tracking.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ASSESSMENT</div>
+        <div class="tl-event">Elias uses his commercial career expertise to assess Coldwall Holdings as a security company. It appears to be a functioning operation — not purely a criminal front — but one with a flexible moral framework. Their offices are in a nearby warehouse district: a working facility with offices on the second level, security mechs patrolling the perimeter in three-unit groups, razor wire fencing.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFILTRATION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[04]</span>
+      <span class="label">COLDWALL HOLDINGS — INFILTRATION</span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">APPROACH</div>
+        <div class="tl-event">The crew takes a skycar to the warehouse district at night. Two patrol units of three mechs each. Razor wire fence perimeter. <strong>Elias</strong> uses bolt cutters from his infiltration kit — partial success. <strong>Mara</strong> times the mechs and keeps watch, elevating the cut to a full success. A section of fence is lifted and the whole crew gets through.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ENTRY</div>
+        <div class="tl-event"><strong>Neyla</strong> accesses the personnel door control panel — partial success. The door opens briefly. <strong>Clifton teleports</strong> himself and remaining crew members through the door before it locks again. <strong>Kepler</strong> (stealth) was already inside somehow, appearing mid-scene with a cigarette and half a bottle of booze. Nobody asks.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CONTACT</div>
+        <div class="tl-event">A voice on the PA orders them to leave. K'thlx-kek identifies the crew as following up on the diplomatic kidnapping. The lights cut. <strong>An Undrel steps into the light with hands raised</strong> — no weapons, no aggression. This is <strong>Feln Drevva</strong>. He confirms he ran the operation; says he is not authorized to name who gave him orders.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ESCALATION</div>
+        <div class="tl-event">Elsewhere in the warehouse, a human man is spotted at a far door. <strong>Kepler opens fire</strong> — headshot. The man drops. Immediately, return fire — <strong>Kepler takes a severe gunshot wound</strong> to the shoulder plus a bleeding debility. The voice changes on the PA. A new speaker announces himself and shuts down the mechs.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAHVEN RUSK -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[05]</span>
+      <span class="label">PAHVEN RUSK — PRESIDENT, COLDWALL HOLDINGS</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Elias makes a critical assessment roll and identifies the new speaker as <strong>Pahven Rusk</strong> — the president of Coldwall Holdings. His face is publicly known. Elias calls him by name. Rusk is cornered and chooses negotiation over escalation. His wounded companion is allowed to leave for medical attention. Mechs stand down.
+      </p>
+      <div class="flavor-block">
+        "Pahven, this has gone wrong in so many ways. I think it's time that we just break up business... This has crossed too many of my moral objections."
+        <br>— Feln Drevva, to Rusk
+      </div>
+      <div class="flavor-block" style="margin-top:8px;">
+        "I can confirm that I was working with Doveth Karrun. I can give you that information. That should not incriminate me."
+        <br>— Pahven Rusk
+      </div>
+      <ul class="intel-list" style="margin-top:12px;">
+        <li>Rusk provides an optical chip containing: <strong>full evidence linking Doveth Karrun</strong> (Tharven Sectoral Compact sector rep) to the operation, communications, arrangements, and payment chain.</li>
+        <li>The chip is conspicuously edited — <strong>Pahven Rusk's own name does not appear</strong>. He has scrubbed himself from the record.</li>
+        <li><strong>Elias records the conversation</strong> on his survey kit data recorder. Rusk explicitly states on recording that he edited the data to remove his own involvement. This recording is retained as leverage.</li>
+        <li>Decision: the crew accepts the chip and the deal. No further violence. Rusk and Feln go their separate ways. The crew walks out.</li>
+        <li>Reward: <strong>favor with Coldwall Holdings</strong> (chosen over demanding Rusk's full exposure). The blackmail recording is kept as separate security.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- RESOLUTION + DELIVERY -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[06]</span>
+      <span class="label">RESOLUTION — KNOT UNDONE CLOSED</span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">DATA DELIVERED</div>
+        <div class="tl-event">The optical chip — evidence against Doveth Karrun, minus Rusk's self-incrimination — is transmitted to Keth Aulric and Sorel Vev. The mission is formally concluded. Doveth Karrun is implicated. What justice looks like from here is in the Continuum's hands.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">OSSIN RELEASED</div>
+        <div class="tl-event">After the Coldwall situation resolves, Ossin is released with a strong suggestion to turn over a new leaf. He has never technically killed anyone and was hired for containment, not murder. He rubs his wrists and leaves, mildly grateful and clearly relieved. No further consequence assumed.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CRAMPED QUARTERS</div>
+        <div class="tl-event">Three days of recovery aboard the Lovelace. The GM calls for cramped quarters rolls. Everyone rolls well. Two results surfaced: <strong>Mara overheard Elias complaining about her performance</strong> to someone — creating friction. <strong>Clifton revealed his backstory to Kepler</strong> — orphaned as a young teen, enlisted at 18, identified as psionic at 19, recruited into the School's specialist program for a pay upgrade.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW MISSION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[07]</span>
+      <span class="label">NEW JOB — THE LONG CARRY</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Three days into recovery, a message arrives. Recorded. A human woman, mid-thirties, professional, wearing a lab coat — seated at a terminal.
+      </p>
+      <div class="flavor-block">
+        "My name is Doctor Liang Huxu. I'm hoping that you can help us with transport. There is someone waiting at Sector 97 — a Kaluarga called Oueikaru. They need transport to Thessavar. The pay is good. All that information you can find on the attached files."
+      </div>
+      <ul class="intel-list" style="margin-top:12px;">
+        <li><strong>Client:</strong> Dr. Liang Huxu, human xenobiologist. Already at destination (Thessavar) with the receiving party.</li>
+        <li><strong>Passenger:</strong> Oueikaru — Kaluarga, third gender (matrix), semi-aquatic. Pick up at Sector 97.</li>
+        <li><strong>Destination:</strong> Thessavar — the Pelhari homeworld.</li>
+        <li><strong>Payment:</strong> described as good. Exact terms in attached files. Verification response expected in ~24 hours due to transmission delay.</li>
+        <li>Background check on Oueikaru: <strong>clean public record</strong>. Prolific matrix — has facilitated multiple interspecies births. Legally and culturally unremarkable by Kaluarga standards.</li>
+        <li>Kaluarga matrix role explained: three parties required for Kaluarga reproduction. The matrix provides genetic scaffolding to combine DNA. It is not a transactional or commercial arrangement; the motivations and methods are culturally distinct from human frameworks.</li>
+        <li>The crew will need to prepare for a semi-aquatic passenger — Oueikaru will require a suitable environment aboard the Lovelace. The medbay's smuggling compartments (Millennium Falcon-style, previously noted) can be reconfigured with removable plates to create a submersion pool.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CREW STATUS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[08]</span>
+      <span class="label">CREW STATUS — END OF SESSION</span>
+    </div>
+    <div class="section-body">
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="sc-name">CLIFTON POOLE</div>
+          <div class="sc-status ok">No new injuries. Backstory revealed to Kepler. Teleportation used effectively x2.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">ELIAS CORVALLIN</div>
+          <div class="sc-status warn">Minor stun injury — headbutt during Rusk grapple. Clears after a few hours. Shoulder from Session 3 ongoing recovery.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">KEPLER</div>
+          <div class="sc-status crit">Severe gunshot wound — shoulder (return fire at Coldwall). Bleeding debility active. Treated self; severe removed. Bleeding managed.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">MARA WEBB</div>
+          <div class="sc-status warn">No new injuries. Friction with Elias — overheard criticism. Mentally rough stretch; still considering pinky replacement.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">NEYLA LUNEXA</div>
+          <div class="sc-status ok">No injuries. Access rolls successful. Technologic and AI used effectively.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">REP. K'THLX-KEK</div>
+          <div class="sc-status ok">No injuries. Led interrogation of Ossin. Advancement possible — check XP totals.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADVANCEMENT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[09]</span>
+      <span class="label">ADVANCEMENT TRIGGERS — SESSION 04</span>
+    </div>
+    <div class="section-body">
+      <table class="adv-table">
+        <thead>
+          <tr>
+            <th>TRIGGER</th>
+            <th>SOURCE / NOTES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A danger is turned aside</td>
+            <td>Mara — avoided escalation with mechs and Rusk; no further loss of fingers</td>
+          </tr>
+          <tr>
+            <td>A conspiracy is uncovered</td>
+            <td>Kepler — Doveth Karrun named and evidence in hand</td>
+          </tr>
+          <tr>
+            <td>A new culture encountered</td>
+            <td>Neyla — Kaluarga matrix role and KMFIG biology (heard, not yet experienced)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="color:#1e8c3a; font-size:12px; margin-top:12px;">
+        XP NOTE: Humans at 6 experience heading into this session — enough for final advancement (7 skills cap). K'thlx-kek advanced last session; verify current XP. Triggers above = 2 XP to all crew.
+      </p>
+    </div>
+  </div>
+
+  <!-- OPEN THREADS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[10]</span>
+      <span class="label">OPEN THREADS — HEADING INTO SESSION 05</span>
+    </div>
+    <div class="section-body">
+      <ul class="intel-list">
+        <li><strong>THE LONG CARRY</strong> — New mission accepted. Pick up Oueikaru at Sector 97. Deliver to Thessavar. Dr. Liang Huxu and Dhuvarel (Pelhari spouse) are waiting at destination. Pay described as good; exact terms in attached files.</li>
+        <li><strong>LOVELACE PREP</strong> — Medbay reconfiguration needed: smuggling compartment plates can be removed to create a submersion pool suitable for a semi-aquatic passenger. Elias has a tech team working on specifications.</li>
+        <li><strong>COLDWALL FAVOR</strong> — Pahven Rusk owes the crew a favor. This was chosen over further exposure. The blackmail recording of Rusk admitting he edited the evidence is held separately by Elias as insurance.</li>
+        <li><strong>DOVETH KARRUN</strong> — Named and implicated. Evidence delivered. Not in custody. The Continuum and its justice apparatus take it from here.</li>
+        <li><strong>MARA / ELIAS FRICTION</strong> — Mara overheard Elias criticizing her performance. Unresolved. Will affect cramped quarters dynamics aboard the Lovelace on a long haul transit.</li>
+        <li><strong>NODE 7V ANOMALY</strong> — Still unresolved. The 25-year transponder timestamp has not been followed up on. The full log data is aboard the ship.</li>
+        <li><strong>CRETHUL DEBT (×1)</strong> — The concentrator of the Righteous Fury is dead. Debt persists.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="footer">
+    TAW-CVS LOVELACE // MISSION LOG // SESSION 04 // END OF RECORD<br>
+    VERATH STATION — SECTOR 379 — COLDWALL HOLDINGS DISTRICT
+  </div>
+
+</div>
+</body>
+</html>
