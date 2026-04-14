@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARRIVAL // SESSION 05 RECAP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #33ff66;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 32px 16px;
+  }
+
+  .terminal { max-width: 820px; margin: 0 auto; }
+
+  .boot-header {
+    border: 1px solid #1a4a28;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    background: #050e08;
+  }
+  .boot-header .sys-line { color: #1e8c3a; font-size: 12px; margin-bottom: 2px; }
+  .boot-header .title { color: #33ff66; font-size: 22px; letter-spacing: 4px; margin: 8px 0 4px; }
+  .boot-header .subtitle { color: #1e8c3a; font-size: 12px; letter-spacing: 2px; }
+  .boot-header .blink { animation: blink 1.2s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .section { border: 1px solid #1a4a28; margin-bottom: 20px; background: #050e08; }
+  .section-header {
+    background: #0e2a18; padding: 8px 16px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid #1a4a28;
+  }
+  .section-header .tag { color: #1e8c3a; font-size: 11px; letter-spacing: 1px; }
+  .section-header .label { color: #33ff66; font-size: 13px; letter-spacing: 2px; }
+  .section-body { padding: 16px 20px; }
+
+  .timeline-item {
+    display: grid; grid-template-columns: 120px 1fr; gap: 0 16px;
+    margin-bottom: 16px; padding-bottom: 16px;
+    border-bottom: 1px dashed #0d2a18;
+  }
+  .timeline-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .tl-time { color: #1e8c3a; font-size: 12px; padding-top: 2px; }
+  .tl-event { color: #ccffdd; }
+  .tl-event strong { color: #33ff66; }
+
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .status-grid { grid-template-columns: 1fr; } }
+  .status-card { border: 1px solid #1a4a28; padding: 10px 14px; background: #03090a; }
+  .status-card .sc-name { color: #33ff66; font-size: 12px; letter-spacing: 1px; margin-bottom: 4px; }
+  .status-card .sc-status { font-size: 12px; color: #ccffdd; }
+  .status-card .sc-status.warn { color: #ffcc44; }
+  .status-card .sc-status.crit { color: #ff4444; }
+  .status-card .sc-status.ok   { color: #33ff66; }
+
+  .intel-list { list-style: none; padding: 0; }
+  .intel-list li {
+    padding: 4px 0 4px 18px; position: relative;
+    color: #ccffdd; border-bottom: 1px dashed #0d2a18; font-size: 13px;
+  }
+  .intel-list li:last-child { border-bottom: none; }
+  .intel-list li::before { content: "▸"; position: absolute; left: 0; color: #1e8c3a; }
+  .intel-list li strong { color: #33ff66; }
+
+  .adv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .adv-table th {
+    background: #0e2a18; color: #1e8c3a; padding: 6px 12px;
+    text-align: left; letter-spacing: 1px; border-bottom: 1px solid #1a4a28;
+  }
+  .adv-table td {
+    padding: 7px 12px; color: #ccffdd;
+    border-bottom: 1px dashed #0d2a18; vertical-align: top;
+  }
+  .adv-table tr:last-child td { border-bottom: none; }
+  .adv-table td:first-child { color: #33ff66; white-space: nowrap; }
+
+  .flavor-block {
+    border-left: 3px solid #1e8c3a; padding: 10px 16px;
+    background: #03090a; margin: 12px 0;
+    color: #99ddbb; font-size: 13px; font-style: italic;
+  }
+
+  .mission-banner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px; background: #0e2a18;
+    border: 1px solid #33ff66; margin-bottom: 28px;
+    flex-wrap: wrap; gap: 8px;
+  }
+  .mission-banner .mb-label { color: #1e8c3a; font-size: 11px; letter-spacing: 2px; }
+  .mission-banner .mb-value { color: #33ff66; font-size: 13px; }
+  .mission-banner .mb-value.active { color: #ffcc44; }
+
+  .alert-block {
+    border: 1px solid #ff4444;
+    background: #120505;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #ffaaaa;
+  }
+  .alert-block strong { color: #ff4444; }
+
+  .equipment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .equipment-grid { grid-template-columns: 1fr; } }
+  .eq-card { border: 1px solid #1a4a28; padding: 10px 14px; background: #03090a; }
+  .eq-card .eq-name { color: #33ff66; font-size: 12px; letter-spacing: 1px; margin-bottom: 4px; }
+  .eq-card .eq-detail { font-size: 12px; color: #ccffdd; }
+  .eq-card .eq-owner { color: #1e8c3a; font-size: 11px; margin-top: 4px; }
+
+  .footer { text-align: center; color: #1e8c3a; font-size: 11px; padding-top: 20px; letter-spacing: 1px; }
+  .divider { border: none; border-top: 1px solid #1a4a28; margin: 20px 0; }
+</style>
+</head>
+<body>
+<div class="terminal">
+
+  <div class="boot-header">
+    <div class="sys-line">TAW-CVS LOVELACE // CREW INTERFACE v4.1 // MISSION LOG</div>
+    <div class="sys-line">SUBSTRATE TRANSIT — VERATH STATION → THESSAVAR (PELHARI HOMEWORLD)</div>
+    <div class="title">SESSION 05</div>
+    <div class="subtitle">THE LONG CARRY &nbsp;▸&nbsp; DEPARTURE &amp; FIRST DAY IN TRANSIT<span class="blink">_</span></div>
+  </div>
+
+  <div class="mission-banner">
+    <div>
+      <div class="mb-label">MISSION</div>
+      <div class="mb-value">The Long Carry — transport Oueikaru to Thessavar</div>
+    </div>
+    <div>
+      <div class="mb-label">STATUS</div>
+      <div class="mb-value active">IN TRANSIT — EMERGENCY LANDING IN PROGRESS</div>
+    </div>
+    <div>
+      <div class="mb-label">VESSEL STATUS</div>
+      <div class="mb-value active">MAJOR DAMAGE — CRASH LANDED</div>
+    </div>
+  </div>
+
+  <!-- CLASS-TWO AWARDS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[01]</span>
+      <span class="label">MISSION REWARDS — CLASS-TWO ASSETS DISTRIBUTED</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Before departure, the crew receives their class-two asset payment from the Knot Undone contract — one item each. These were discussed and selected at the start of the session.
+      </p>
+      <div class="equipment-grid">
+        <div class="eq-card">
+          <div class="eq-name">RITUAL DAGGER — "THE SCHOOL BLADE"</div>
+          <div class="eq-detail">Melee weapon. Traits: Defensive, Shock, Disruptive. A status dagger from the Terran psionic School — a rank Clifton never reached. Infused with cyanic energy; disrupts machinery and delivers a shock effect. Origin of the gift unexplained but traceable to Vethis's gratitude.</div>
+          <div class="eq-owner">CLIFTON POOLE</div>
+        </div>
+        <div class="eq-card">
+          <div class="eq-name">CONCEALED SNIPER RIFLE</div>
+          <div class="eq-detail">Firearm. Traits: Concealed, Scope. Foldable or arm-integrated; does not register on casual scans. Long-range accurate. Elias considered Penetrating as second trait but settled on Scope for narrative consistency.</div>
+          <div class="eq-owner">ELIAS CORVALLIN</div>
+        </div>
+        <div class="eq-card">
+          <div class="eq-name">MESH-WEAVE ARMOR SUIT</div>
+          <div class="eq-detail">Attire. Traits: Sealed (vacuum-rated), Mesh Weave (+1 armor, appears as normal clothing). Default wear going forward. Previous stealth suit retained for infiltration scenarios. Shoulder loss and finger loss have made the sealed trait feel non-optional.</div>
+          <div class="eq-owner">MARA WEBB</div>
+        </div>
+        <div class="eq-card">
+          <div class="eq-name">RADIANT STAFF UPGRADE</div>
+          <div class="eq-detail">Melee weapon upgrade. Traits: Radiance (blinding, visually striking — rainbow-glow active), Shock (stun mode). Same staff, enhanced. Can switch between its normal appearance and arcing electrical discharge mode.</div>
+          <div class="eq-owner">REP. K'THLX-KEK</div>
+        </div>
+        <div class="eq-card">
+          <div class="eq-name">RUGGED EVA SUIT (CLASS-TWO)</div>
+          <div class="eq-detail">Attire. Traits: Sealed, Mesh Weave. Upgraded from the class-one base. Sealed helmet activates on command — relevant given the recycler-tank incident last session.</div>
+          <div class="eq-owner">KEPLER</div>
+        </div>
+      </div>
+      <div class="flavor-block" style="margin-top:14px;">
+        Clifton: "I'm not completely sure why this happened. I never achieved that level." — GM: "It seems very much like something Vethis was instrumental in arranging for you."
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPARTURE PREP -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[02]</span>
+      <span class="label">DEPARTURE PREP — OUEIKARU BOARDS</span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">ACCOMMODATIONS</div>
+        <div class="tl-event">The medbay submersion pool is confirmed serviceable. Oueikaru — a Kaluarga, third gender (matrix), semi-aquatic, two prehensile tails, ceremonial robes — boards with fluid grace and inspects the modifications. Verdict: "That'll be satisfactory." They do not need full immersion for the whole journey — a high-humidity cabin adjacent to the medbay will suffice day-to-day. Elias' tech crew dials the environmental controls up. Condensation visible on cabin walls. Automatic misters active.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ROUTING</div>
+        <div class="tl-event">Elias advises Neyla to plot a less-traveled route to avoid drawing attention. The crew agrees the priority is avoiding <strong>Crethul-heavy transit nodes</strong>. Neyla plots accordingly — clear of the direct station and its associated nodes. The Lovelace enters substrate transit. Today is Tuesday.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">RESEARCH GOALS</div>
+        <div class="tl-event">In-transit crew assignments: Neyla and Kepler — get to know Oueikaru. K'thlx-kek — learn Pelhari culture ahead of arrival. Mara — research Thessavar: the Pelhari Continuance, protocol expectations, neighboring systems and factions. Elias — dig deeper into the 25-year Node 7V anomaly using travel data for comparison.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DINNER -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[03]</span>
+      <span class="label">FIRST NIGHT — DINNER WITH OUEIKARU</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        First evening in transit. The crew eats in the conference room / officers' mess. Elias's executive assistant prepares a protein stir fry from the ship's stores. Oueikaru brings their own nutrient paste — a specially formulated enzyme compound required during their current meditative state.
+      </p>
+      <div class="flavor-block">
+        "I am aware of the smell. If you prefer that I eat in my cabin from now on, that is acceptable."
+      </div>
+      <ul class="intel-list" style="margin-top:12px;">
+        <li>The nutrient paste has an <strong>overpowering, distinctive smell</strong> — present between every bite of everyone else's meal. The crew adjusts. Mostly.</li>
+        <li><strong>K'thlx-kek</strong> offers Oueikaru a taste of crew food in return. Oueikaru declines — dietary restrictions during meditative state are strict. However, they invite K'thlx-kek to try the paste. K'thlx-kek accepts (face adversity, physique). The flavor is unexpectedly <strong>nostalgic</strong> — not unlike food given to young on their homeworld. Oueikaru notices the recognition. Something shifts between them.</li>
+        <li><strong>Kepler</strong> asks about Oueikaru's family. Answer: they belong to a small crèche, raised collectively — biological parentage matters less than functional role (caregiver, playmate, etc.). Not back to their homeworld in twenty years.</li>
+        <li>A follow-up question is asked about why they haven't returned. Oueikaru: "I don't mean to be rude, but I will decline to answer that question. No ill will." The topic is closed without tension.</li>
+        <li><strong>Mara's research results:</strong> The <strong>Pelhari Continuance</strong> (Thessavar's global government) prizes ritual in almost every aspect of life. Protocol is deeply embedded culturally. Spacefaring Pelhari are more relaxed, but planet-bound ones are sticklers. The crew needs to be careful about procedural missteps on arrival.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- NODE 7V INVESTIGATION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[04]</span>
+      <span class="label">ELIAS — NODE 7V ANOMALY INVESTIGATION</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:12px;">
+        Elias accesses the dark sector of the station network to dig further into the 25-year anomaly. Partial success on the access roll — <strong>the session is not stealthy</strong>. An undeletable browser history of this query now exists. Poking further carries risk of being noticed.
+      </p>
+      <ul class="intel-list">
+        <li>Ship registration chains are locked and maintained at transit nodes. Charting the Lovelace's full transit history shows: <strong>there is no record of this ship ever being at Node 7V 25 years ago</strong>. No log. No approach. Nothing.</li>
+        <li>The Lovelace itself is barely 30 years old. The math does not work if it was a prior voyage.</li>
+        <li>While deep in the dark sector, <strong>an encrypted message arrives</strong> addressed to Elias. No timestamp.</li>
+        <li>Elias moves it to an air-gapped personal system — the same secure partition holding the Rusk recording — and decrypts it there.</li>
+      </ul>
+      <div class="alert-block">
+        <strong>MESSAGE CONTENTS:</strong> A single sentence.<br><br>
+        <em>"Too much knowledge is dangerous."</em><br><br>
+        Signed with <strong>Elias's own initials</strong>. The message carries no timestamp. It is not clear when it was sent, or from when.
+      </div>
+      <p style="color:#ccffdd; font-size:13px; margin-top:12px;">
+        No follow-up was taken in-session. The message is held on Elias's personal encrypted partition. No one else has been told.
+      </p>
+    </div>
+  </div>
+
+  <!-- THE EGG / BENEDICT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[05]</span>
+      <span class="label">UNKNOWN BIOSIGNATURE — "BENEDICT"</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Several hours into transit, a blinking indicator appears on the ship's hollow display: an <strong>unknown biological signature</strong> aboard. It is in the cargo hold and moving rapidly through the ship's walls.
+      </p>
+      <div class="timeline-item">
+        <div class="tl-time">TRACKING</div>
+        <div class="tl-event">Mara reports the signature and tracks it on her display. Neyla can see it through her technologic awareness. Elias moves to intercept in engineering. The creature travels through walls, moving upward level by level — from cargo, through crew, toward command. Clifton identifies it acoustically: it has a clear destination, moving with purpose.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">DISCOVERY</div>
+        <div class="tl-event">Mara reaches Oueikaru's cabin first and knocks. The door opens. Something drops from a ceiling vent — Oueikaru catches it in their hands reflexively. They look at it. They look at Mara. "This isn't mine." The creature is roughly the size of a tennis ball: <strong>translucent, gelatinous, two mobile eye spots, six small pseudopod limbs, a glowing amber core</strong>. Its pseudopods grip Oueikaru's hands briefly before releasing.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">IDENTIFICATION</div>
+        <div class="tl-event"><strong>Kepler's internal recognition roll: expertise.</strong> The creature's gelatinous translucent form and bioluminescent core match something from session zero — a dormant egg found in the cargo hold. Kepler's internal monologue: <em>oh, fuck.</em> The egg hatched. The crew has been carrying this thing since before the campaign started. It has apparently been living in the ship's infrastructure — specifically in a smuggling compartment beneath the medbay — this entire time.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CONTAINMENT</div>
+        <div class="tl-event">The creature seems drawn toward Oueikaru — possibly toward the high-humidity, high-temperature environment of their cabin. Mara telekinetically encourages it toward the medbay instead. It settles when placed in an environment-controlled cabinet with humidity and temperature dialed up. Two eye spots orient toward Neyla. Oueikaru is asked: do you know what this is? Answer: "I do not. And in my current biological state, I am susceptible to unknown organisms." Secure containment confirmed.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">NAMING</div>
+        <div class="tl-event">Kepler has apparently been calling it <strong>Benedict</strong>. The name sticks.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CYBER INCIDENT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[06]</span>
+      <span class="label">CYBER INCIDENT — SYSTEMS FAILURE IN SUBSTRATE</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-block">
+        <strong>⚠ ACTIVE THREAT:</strong> While still in substrate transit, non-critical ship systems begin cycling offline and back on at increasing frequency — lights flickering, elevator inoperative, door seals intermittent. The pattern has all the hallmarks of a <strong>cyberattack</strong>. No external signal detected. Origin: internal.
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ASSESSMENT</div>
+        <div class="tl-event">Neyla diagnoses the situation: something internal is attacking ship systems. Not Benedict — Elias traces his path through the walls and finds no corrosion or damage consistent with the creature causing this. The attack is spreading and accelerating. The only reliable fix is a full system restart — but that means dropping out of substrate and landing somewhere.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">NEYLA'S CALL</div>
+        <div class="tl-event">Neyla is alone with the decision — everyone else is dealing with their section of the ship. She suspects it may be a trap to force them out of substrate at a specific location. She exits anyway: "Better judgment says exit at the nearest node." She plots for a planet two light-hours out and engages the Astrophage drives to cut transit to 30 minutes.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CRASH SEQUENCE</div>
+        <div class="tl-event">The sudden deceleration hits hard. K'thlx-kek is thrown against a wall — <strong>major injury, minor stun debility</strong>. Numbness, noticeable lilt, clumsy until rested. Kepler scrambles to protect Benedict's container but is flung across the medbay, slams into the smuggling tank hatch, which closes on him. He activates his sealed helmet before taking water. Clifton is pinned against the elevator door by g-forces — no permanent damage, wind knocked out, suit absorbs impact.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">POWER FAILURE</div>
+        <div class="tl-event">The power drops mid-braking burn. Elias and his tech crew — in engineering — lose 15 seconds of the braking burn. Neyla compensates on partial success: brings it down to survivable. The Lovelace takes <strong>major damage</strong> on landing — what would have been critical is walked back by Neyla's skill. Everyone checks on everyone else. Alive.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">WHERE THEY ARE</div>
+        <div class="tl-event">Unknown rocky moon or planet. Low gravity — slightly less than standard. On the horizon, perhaps a mile out: <strong>several brown buildings</strong>. Some kind of settlement.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREW STATUS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[07]</span>
+      <span class="label">CREW STATUS — END OF SESSION</span>
+    </div>
+    <div class="section-body">
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="sc-name">CLIFTON POOLE</div>
+          <div class="sc-status ok">Wind knocked out by g-force impact — exosuit absorbed it. No injury logged. New asset: ritual dagger (The School Blade).</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">ELIAS CORVALLIN</div>
+          <div class="sc-status warn">No new injuries. Holds an encrypted message from himself, no timestamp, on an air-gapped partition. Browser history from dark-sector research is undeletable.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">KEPLER</div>
+          <div class="sc-status warn">Sealed in the medbay submersion tank during landing — suit activated in time. No injury. Benedict is his unofficial ward.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">MARA WEBB</div>
+          <div class="sc-status ok">Braced the containment box during landing. No injuries. New asset: mesh-weave sealed armor suit (equipped).</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">NEYLA LUNEXA</div>
+          <div class="sc-status ok">Piloted crash landing to major damage result from potential critical. In the cockpit, strapped in. No injuries.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">REP. K'THLX-KEK</div>
+          <div class="sc-status crit">Major injury — impact with wall during deceleration. Minor stun debility — numbness, noticeable lilt. Clumsy until rested (one night's sleep).</div>
+        </div>
+      </div>
+      <div class="status-card" style="margin-top:10px;">
+        <div class="sc-name">OUEIKARU (PASSENGER)</div>
+        <div class="sc-status warn">Strapped down in cabin, both prehensile tails wrapped around hard points. Water sloshing in tank. Condition unknown — door not opened post-crash.</div>
+      </div>
+      <div class="status-card" style="margin-top:10px; border-color: #ffcc44;">
+        <div class="sc-name" style="color:#ffcc44;">TAW-CVS LOVELACE</div>
+        <div class="sc-status warn">Major damage sustained on crash landing. Crethul-avoidance route now irrelevant — position is unknown relative to planned course. Cyberattack origin unidentified. Systems need full restart.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADVANCEMENT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[08]</span>
+      <span class="label">ADVANCEMENT TRIGGERS — SESSION 05</span>
+    </div>
+    <div class="section-body">
+      <table class="adv-table">
+        <thead>
+          <tr>
+            <th>TRIGGER</th>
+            <th>SOURCE / NOTES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A danger is turned aside</td>
+            <td>Mara — kept the containment box stable; no second finger incident</td>
+          </tr>
+          <tr>
+            <td>A new culture experienced</td>
+            <td>K'thlx-kek — ate Oueikaru's nutrient paste; Pelhari protocol research completed</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="color:#1e8c3a; font-size:12px; margin-top:12px;">2 EXPERIENCE AWARDED TO ALL CREW — confirm XP totals going into Session 06.</p>
+    </div>
+  </div>
+
+  <!-- OPEN THREADS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[09]</span>
+      <span class="label">OPEN THREADS — HEADING INTO SESSION 06</span>
+    </div>
+    <div class="section-body">
+      <ul class="intel-list">
+        <li><strong>CRASH SITE — UNKNOWN LOCATION</strong> — The Lovelace has put down on a rocky moon or low-gravity body. Buildings visible approximately one mile out. Cyberattack origin still unidentified. Ship needs a full system restart to clear the attack. Major hull damage.</li>
+        <li><strong>SETTLEMENT AHEAD</strong> — Unknown affiliation. Possibly the reason the cyberattack was designed to force a landing here. Could be a trap. Could be a coincidence. The crew does not know.</li>
+        <li><strong>OUEIKARU — STATUS UNKNOWN POST-CRASH</strong> — Cabin door has not been opened since landing. Oueikaru was braced and strapped. Condition unconfirmed.</li>
+        <li><strong>BENEDICT</strong> — Contained in medbay isolation cabinet. Drawn toward Oueikaru's biological chemistry. Origin confirmed: the dormant egg from session zero, carried the entire time without knowledge. Species unknown. Behavior: moves through walls, drawn to heat and humidity. Responds to Neyla specifically.</li>
+        <li><strong>THE MESSAGE</strong> — Encrypted, no timestamp, signed with Elias's own initials: "Too much knowledge is dangerous." Held on Elias's air-gapped partition. No one else told. The dark-sector session that preceded it left an undeletable trace.</li>
+        <li><strong>THESSAVAR — PROTOCOL WARNING</strong> — Pelhari Continuance is protocol-obsessive. Planet-bound Pelhari will notice every procedural error. The crew needs preparation before landing.</li>
+        <li><strong>SUPERCONDUCTING FIBER</strong> — Still in cargo. Plan was to barter it at Thessavar for trade goods on the return leg.</li>
+        <li><strong>NODE 7V ANOMALY</strong> — No ship log from 25 years ago. The Lovelace is barely old enough for it to have happened. The message signed with Elias's initials may be related.</li>
+        <li><strong>CRETHUL DEBT (×1)</strong> — Route was plotted to avoid Crethul nodes. Current position unknown — routing is now disrupted.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="footer">
+    TAW-CVS LOVELACE // MISSION LOG // SESSION 05 // END OF RECORD<br>
+    CRASH SITE — UNKNOWN BODY — SUBSTRATE ROUTE: VERATH → THESSAVAR
+  </div>
+
+</div>
+</body>
+</html>
