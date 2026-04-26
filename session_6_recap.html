@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARRIVAL // SESSION 06 RECAP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #33ff66;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 32px 16px;
+  }
+
+  .terminal { max-width: 820px; margin: 0 auto; }
+
+  .boot-header {
+    border: 1px solid #1a4a28;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    background: #050e08;
+  }
+  .boot-header .sys-line { color: #1e8c3a; font-size: 12px; margin-bottom: 2px; }
+  .boot-header .title { color: #33ff66; font-size: 22px; letter-spacing: 4px; margin: 8px 0 4px; }
+  .boot-header .subtitle { color: #1e8c3a; font-size: 12px; letter-spacing: 2px; }
+  .boot-header .blink { animation: blink 1.2s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .section { border: 1px solid #1a4a28; margin-bottom: 20px; background: #050e08; }
+  .section-header {
+    background: #0e2a18; padding: 8px 16px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid #1a4a28;
+  }
+  .section-header .tag { color: #1e8c3a; font-size: 11px; letter-spacing: 1px; }
+  .section-header .label { color: #33ff66; font-size: 13px; letter-spacing: 2px; }
+  .section-body { padding: 16px 20px; }
+
+  .timeline-item {
+    display: grid; grid-template-columns: 120px 1fr; gap: 0 16px;
+    margin-bottom: 16px; padding-bottom: 16px;
+    border-bottom: 1px dashed #0d2a18;
+  }
+  .timeline-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .tl-time { color: #1e8c3a; font-size: 12px; padding-top: 2px; }
+  .tl-event { color: #ccffdd; }
+  .tl-event strong { color: #33ff66; }
+
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .status-grid { grid-template-columns: 1fr; } }
+  .status-card { border: 1px solid #1a4a28; padding: 10px 14px; background: #03090a; }
+  .status-card .sc-name { color: #33ff66; font-size: 12px; letter-spacing: 1px; margin-bottom: 4px; }
+  .status-card .sc-status { font-size: 12px; color: #ccffdd; }
+  .status-card .sc-status.warn { color: #ffcc44; }
+  .status-card .sc-status.crit { color: #ff4444; }
+  .status-card .sc-status.ok   { color: #33ff66; }
+
+  .intel-list { list-style: none; padding: 0; }
+  .intel-list li {
+    padding: 4px 0 4px 18px; position: relative;
+    color: #ccffdd; border-bottom: 1px dashed #0d2a18; font-size: 13px;
+  }
+  .intel-list li:last-child { border-bottom: none; }
+  .intel-list li::before { content: "▸"; position: absolute; left: 0; color: #1e8c3a; }
+  .intel-list li strong { color: #33ff66; }
+
+  .adv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .adv-table th {
+    background: #0e2a18; color: #1e8c3a; padding: 6px 12px;
+    text-align: left; letter-spacing: 1px; border-bottom: 1px solid #1a4a28;
+  }
+  .adv-table td {
+    padding: 7px 12px; color: #ccffdd;
+    border-bottom: 1px dashed #0d2a18; vertical-align: top;
+  }
+  .adv-table tr:last-child td { border-bottom: none; }
+  .adv-table td:first-child { color: #33ff66; white-space: nowrap; }
+
+  .flavor-block {
+    border-left: 3px solid #1e8c3a; padding: 10px 16px;
+    background: #03090a; margin: 12px 0;
+    color: #99ddbb; font-size: 13px; font-style: italic;
+  }
+
+  .mission-banner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px; background: #0e2a18;
+    border: 1px solid #33ff66; margin-bottom: 28px;
+    flex-wrap: wrap; gap: 8px;
+  }
+  .mission-banner .mb-label { color: #1e8c3a; font-size: 11px; letter-spacing: 2px; }
+  .mission-banner .mb-value { color: #33ff66; font-size: 13px; }
+  .mission-banner .mb-value.active { color: #ffcc44; }
+  .mission-banner .mb-value.warn { color: #ffcc44; }
+
+  .npc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .npc-grid { grid-template-columns: 1fr; } }
+  .npc-card { border: 1px solid #1a4a28; padding: 10px 14px; background: #03090a; }
+  .npc-card .npc-name { color: #33ff66; font-size: 12px; letter-spacing: 1px; margin-bottom: 2px; }
+  .npc-card .npc-role { color: #1e8c3a; font-size: 11px; margin-bottom: 4px; }
+  .npc-card .npc-detail { font-size: 12px; color: #ccffdd; }
+
+  .alert-block {
+    border: 1px solid #ff4444; background: #120505;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 13px; color: #ffaaaa;
+  }
+  .alert-block strong { color: #ff4444; }
+
+  .footer { text-align: center; color: #1e8c3a; font-size: 11px; padding-top: 20px; letter-spacing: 1px; }
+  .divider { border: none; border-top: 1px solid #1a4a28; margin: 20px 0; }
+</style>
+</head>
+<body>
+<div class="terminal">
+
+  <div class="boot-header">
+    <div class="sys-line">TAW-CVS LOVELACE // CREW INTERFACE v4.1 // MISSION LOG</div>
+    <div class="sys-line">VASKEN'S CROSSING — ROCKY MOON, THELAC SPORE FIELDS</div>
+    <div class="title">SESSION 06</div>
+    <div class="subtitle">THE LONG CARRY &nbsp;▸&nbsp; VASKEN'S CROSSING<span class="blink">_</span></div>
+  </div>
+
+  <div class="mission-banner">
+    <div>
+      <div class="mb-label">LOCATION</div>
+      <div class="mb-value">Vasken's Crossing — uninhabited moon, transient outpost</div>
+    </div>
+    <div>
+      <div class="mb-label">SHIP STATUS</div>
+      <div class="mb-value warn">GROUNDED — SEVERE DAMAGE — HULL BREACH (AFT CARGO)</div>
+    </div>
+    <div>
+      <div class="mb-label">OUEIKARU STATUS</div>
+      <div class="mb-value warn">NUTRIENT SUPPLY LOST — SUPPLY RUNNING CRITICAL</div>
+    </div>
+  </div>
+
+  <!-- DAMAGE ASSESSMENT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[01]</span>
+      <span class="label">SITUATION — DAMAGE ASSESSMENT</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Session opens immediately after the crash. K'thlx-kek is still stunned from the landing impact — Kepler administers first aid (full success) and gets them mobile. The crew takes stock.
+      </p>
+      <ul class="intel-list">
+        <li>The ship is <strong>listing significantly</strong> — one or more landing struts bent or broken on impact.</li>
+        <li><strong>Significant breach in the aft cargo hold</strong> — the hull has been holed. Not space-worthy until patched. Requires materials the tech crew does not currently have.</li>
+        <li><strong>Food stores are gone</strong> — the crash jettisoned most of them. Two days' worth remains in the galley. This includes <strong>all of Oueikaru's nutrient paste supply</strong>.</li>
+        <li>The tech crew can execute the full system restart (to clear the cyberattack) in a couple of hours — but that's all they can do unassisted. Repair materials must come from elsewhere.</li>
+        <li>Comms with the ship are intermittent — the thelac spores muck up radio antenna transmissions. The antenna requires regular manual cleaning.</li>
+        <li>Vasken's Crossing is not Crethul space. The routing away from Crethul nodes held. This is a transit moon — primarily frequented by merchants, traders, and thelac harvesters.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- THE MOON -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[02]</span>
+      <span class="label">LOCATION — VASKEN'S CROSSING</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Mara makes a full-success navigation assessment. Data point earned. The location is identified.
+      </p>
+      <ul class="intel-list">
+        <li><strong>Vasken's Crossing</strong> — a rocky moon in a transit system. Orbits a gas giant visible and bright in the sky. No permanent population; transient-majority. The only reason anyone comes here is <strong>thelac spores</strong>.</li>
+        <li><strong>Thelac (Velx-4)</strong> — a plant-fungus hybrid. Low mossy beds with stalks that release spore bursts when stepped on, then slowly retract. The spores fill the thin (non-breathable) atmosphere in a pinkish-orange haze. Mild psychoactive properties. The only natural source in known space. Refined into a mildly valuable rosin. Continuum has not explicitly legislated it — jurisdiction varies by destination.</li>
+        <li>The spores <strong>clog suit filters</strong> — sealed gear is mandatory outdoors. Filters require manual clearing every ten minutes or so without the advanced filtration units. <strong>Sealed suits are confirmed for all crew.</strong></li>
+        <li>An outpost of several buildings sits approximately <strong>one mile away</strong> across the badlands terrain. Two landing pads, each with fuel tanks, crane, and cargo containers. The buildings include a cantina, a freight brokerage, a medical clinic, and a docking authority office.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- THE WALK -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[03]</span>
+      <span class="label">THE TRAVERSE — SPORE FIELDS &amp; INFECTED</span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">PREP</div>
+        <div class="tl-event">Clifton scouts the terrain and identifies unknown life form signals trailing the group — not crew, not ship. Something biological is following them out in the spore fields. Elias uses his expedition kit in advance and locates a cache of <strong>six advanced filter units</strong> — gear from a prior survey mission into the thelac fields. Seven crew members, six filters. One person goes without. Clifton draws the short straw, facing worsening conditions.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">FIRST BODY</div>
+        <div class="tl-event">Elias trips setting up a motion sensor tripod and faceplants into a thelac patch. Wiping spores off his faceplate, he finds himself looking at another faceplate — cracked down the middle, pressed into the ground. A desiccated body in a torn suit. <strong>Filaments from the thelac are moving into or out of it.</strong> One of the eyes in the husk tracks toward him. The crew is informed. Nobody touches it.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CONTACT</div>
+        <div class="tl-event">Kepler reappears from wherever he'd wandered off to and spots it first: another suited figure in the mid-distance, moving erratically. <strong>Face shield completely destroyed</strong> — thelac filaments visible inside the suit. It registers the crew and immediately charges. Kepler runs. Clifton fires — takes the left leg off below the knee with a penetrating round. The husk drops but continues dragging itself forward on its hands. Still coming.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">SECOND INFECTED</div>
+        <div class="tl-event">While Clifton is watching the crawler, the desiccated body next to Elias begins to move — filaments snapping taut as it pushes itself upright from the ground. Elias draws his sniper rifle, flips backward to create distance, and fires point-blank into the head. Full detonation: thick blood and spores spray through the cracked helmet in both directions. The rifle jams immediately — the spore discharge has fouled the internal mechanisms. Elias is splattered but uninjured.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">RESOLUTION</div>
+        <div class="tl-event">Clifton finishes the crawler with follow-up shots. It drops face-first. The badges on the suits match the emblem on the advanced filter units — these were part of the same survey crew that left the cache. Six filters found; six crew unaccounted for. Two encountered, both now down. <strong>Four more potentially out in the spore fields.</strong> The crew picks up the pace. All make it to the outpost without further incident.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPOST ARRIVAL -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[04]</span>
+      <span class="label">VASKEN'S CROSSING OUTPOST — ARRIVAL</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        The crew enters through a decontamination airlock — pressurized air jets blast thelac dust off suits from multiple angles over about a minute. Inside: a small cantina with a few traders drinking and smoking. A <strong>human woman behind the bar</strong> — looks like she runs the place.
+      </p>
+      <div class="flavor-block">
+        "Alright. Go ahead and have a seat so I can — grab yourself a drink if you like."
+      </div>
+      <ul class="intel-list" style="margin-top:12px;">
+        <li>Bar menu: mushroom farm output — lasagna, chili, protein stir fry. Simulated meats. Alcohol and water. A round of shots is poured for the crew. Mara gains +1 ongoing to influence rolls for the next hour (inhibitions loosened). No noted harm otherwise.</li>
+        <li><strong>Brodha</strong> — the human woman running the cantina. De facto authority figure at the outpost. Directs the crew to relevant specialists: <strong>Prevek</strong> (docking authority / impound) for ship repair materials; <strong>Holst</strong> (freight broker) for acquisition and trade; <strong>Yuleph</strong> (medic) for Oueikaru's dietary needs.</li>
+        <li>Brodha mentions a <strong>crew that went out a few days ago and hasn't checked in</strong>. Doesn't work for the outpost directly — usually they do check in. The suit emblems from the infected match what the crew describes.</li>
+        <li>A <strong>Pelhari courier ship</strong> has just docked on the west pad. Currently working through Vasken's Crossing docking protocols — Brodha: "sticklers for protocol and ritual." Crew can approach them once the formalities clear, in a couple of hours.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- NPC DIRECTORY -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[05]</span>
+      <span class="label">OUTPOST CONTACTS — KEY NPCs</span>
+    </div>
+    <div class="section-body">
+      <div class="npc-grid">
+        <div class="npc-card">
+          <div class="npc-name">BRODHA</div>
+          <div class="npc-role">Cantina — De Facto Authority</div>
+          <div class="npc-detail">Human woman. Runs the bar and, informally, the outpost. Aware of most comings and goings. Practical and direct. Concerned about the missing survey crew without escalating about it.</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">PREVEK</div>
+          <div class="npc-role">Docking Authority / Impound</div>
+          <div class="npc-detail">Located in the northeast building. Species with a dual-tone synthesized voice quality. Noted the crash landing and has already logged the Lovelace. Can supply standard repair materials — but not the specific components the hull breach requires. Will have the right materials when the next supply run arrives (one to two days estimated).</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">YULEPH</div>
+          <div class="npc-role">Outpost Medic</div>
+          <div class="npc-detail">Has enough compound to synthesize a small amount of Kaluarga nutrient paste — enough for one meal now, two more by morning, then runs out of precursor materials. Has a terminal to check supply chain. Can flag incoming traders carrying relevant ingredients.</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">HOLST</div>
+          <div class="npc-role">Freight Broker</div>
+          <div class="npc-detail">40-something. Specializes in food stocks. Critical success on acquisition roll — food stores fully replenished. Partial success on barter roll for superconducting fiber: willing to trade it up for thelac rosin (class-three cargo). Legal status at Thessavar unconfirmed — "where you're going, may not be a problem." Deal noted; execution pending cargo transfer.</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">TAVAIG</div>
+          <div class="npc-role">Thelac Harvester</div>
+          <div class="npc-detail">Cantina regular. Kepler's likely contact for the thelac angle. Background knowledge on the spore fields and harvesting routes.</div>
+        </div>
+        <div class="npc-card">
+          <div class="npc-name">PELHARI COURIER CREW</div>
+          <div class="npc-role">Recently Docked — West Pad</div>
+          <div class="npc-detail">Three crew, species Pelhari. Performing full arrival ritual on docking — seated in strict rank order, two minutes of threshold ceremony before sitting down. Agenda unknown. They have food supplies for Oueikaru. See below.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUTRIENT CRISIS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[06]</span>
+      <span class="label">CRITICAL — OUEIKARU NUTRIENT SUPPLY</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-block">
+        <strong>⚠ MISSION RISK:</strong> Oueikaru is in a pre-genesis biological state requiring a strict, rare-ingredient nutrient regimen maintained for months. This diet is not optional — breaking it does not kill them immediately, but it <strong>terminates the pregenesis state</strong>, failing the primary mission objective. Stasis is not a viable workaround for the same reason.
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">MEDIC (YULEPH)</div>
+        <div class="tl-event">Yuleph confirms she can synthesize some nutrient paste but her precursor stock is extremely limited. Estimate: one meal available within an hour or two, two more overnight, then depleted. She checks the supply chain — the ingredient list Oueikaru provides is long and the items are rare. She will flag any incoming traders who might carry them.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">PELHARI COURIER</div>
+        <div class="tl-event">K'thlx-kek approaches the Pelhari crew after they complete their arrival ritual — correctly waiting for them to be seated and fully settled before approaching, mirroring what elements of their threshold protocol they observed. The captain assesses K'thlx-kek at length — possibly never having seen a Formicide, possibly a prior negative impression of the species. Suspicious but not hostile.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">THE CAPTAIN'S RESPONSE</div>
+        <div class="tl-event">K'thlx-kek explains the situation: transporting Oueikaru to Thessavar, crashed, nutrient supply lost. The captain responds: they <strong>have the supplies Oueikaru needs</strong> — but they are not for the crew. Clarification: the supplies may already be earmarked, or the captain objects to the nature of the transit, or both. The Pelhari captain is not saying no outright — but he is not offering a path forward either.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">NEGOTIATION</div>
+        <div class="tl-event">Elias considers a bribe (acquisition roll). K'thlx-kek tries a partial influence approach — business framing: can't complete the job, can't get paid, the procedure is legitimate if uncommon. <strong>Partial success.</strong> The Pelhari captain says they will provide the supplies — at a cost. He sends a file to the crew's handhelds and says to contact his ship tomorrow once they've reviewed it. The contents of the file are not revealed in-session. The GM defers to next session: <strong>"the Pelhari blood sports."</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGISTICS SUMMARY -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[07]</span>
+      <span class="label">LOGISTICS — END-OF-SESSION STATUS</span>
+    </div>
+    <div class="section-body">
+      <ul class="intel-list">
+        <li><strong>FOOD STORES</strong> — Fully replenished via Holst (critical acquisition success). No cash-equivalent cost noted; handled as standard acquisition.</li>
+        <li><strong>SUPERCONDUCTING FIBER</strong> — Partial barter success with Holst. Trade arranged: class-two fiber for class-three thelac rosin. Legality at Thessavar unconfirmed. Cargo transfer pending (ship is still grounded). The rosin was the plan to sell on arrival anyway.</li>
+        <li><strong>SHIP REPAIRS</strong> — Prevek can supply materials but not the specific hull-breach components. Next supply run: one to two days. Possible alternative: the lost survey crew's vessel, if it can be located. Prevek has noted the Lovelace's arrival; no impound complications mentioned yet.</li>
+        <li><strong>SYSTEM RESTART</strong> — Tech crew executing full restart independently. Several hours; no player roll required.</li>
+        <li><strong>ELIAS'S SNIPER RIFLE</strong> — Jammed by thelac spore contamination. Requires a patch-up roll with expertise to repair. Elias asks Clifton (military training) for help. Clifton agrees to attempt it.</li>
+        <li><strong>OUEIKARU'S ENVIRONMENT</strong> — Still on EVA suit manual humidity control. Environmental systems should be back online once the restart completes. Submersion pool accessible again once systems restore.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CREW STATUS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[08]</span>
+      <span class="label">CREW STATUS — END OF SESSION</span>
+    </div>
+    <div class="section-body">
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="sc-name">CLIFTON POOLE</div>
+          <div class="sc-status warn">No suit filter for the traverse — faced worsening spore exposure. Cleared after decon airlock. Two infected killed. Attempting to repair Elias's rifle.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">ELIAS CORVALLIN</div>
+          <div class="sc-status warn">Sniper rifle jammed — thelac spore contamination. Spore discharge from infected detonation. Uninjured. Executive assistant left aboard ship to supervise tech crew.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">KEPLER</div>
+          <div class="sc-status ok">No injuries. Spotted infected first; escaped without contact. Food negotiation handled via Holst. Benedict secured aboard ship.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">MARA WEBB</div>
+          <div class="sc-status ok">No injuries. +1 ongoing to influence for ~1 hour (shot). Oueikaru dietary situation flagged to Prevek as potential secondary angle.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">NEYLA LUNEXA</div>
+          <div class="sc-status ok">No injuries. Accompanied Elias and Mara to Prevek. System restart underway.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">REP. K'THLX-KEK</div>
+          <div class="sc-status ok">Stun debility cleared — Kepler's first aid resolved it at session open. Led Pelhari captain negotiation. Partial success: deal pending review of "blood sports" file.</div>
+        </div>
+      </div>
+      <div class="status-card" style="margin-top:10px;">
+        <div class="sc-name">OUEIKARU (PASSENGER)</div>
+        <div class="sc-status warn">Stable but on borrowed time. EVA suit managing humidity manually. Yuleph's synthesized paste covers a few meals. Pelhari courier deal still unresolved. Pregenesis state intact — for now.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADVANCEMENT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[09]</span>
+      <span class="label">ADVANCEMENT TRIGGERS — SESSION 06</span>
+    </div>
+    <div class="section-body">
+      <table class="adv-table">
+        <thead>
+          <tr>
+            <th>TRIGGER</th>
+            <th>SOURCE / NOTES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>An injury was sustained</td>
+            <td>K'thlx-kek — major impact injury on crash landing (carried from S05 into S06 recovery)</td>
+          </tr>
+          <tr>
+            <td>A new culture encountered</td>
+            <td>All — Pelhari ritual behavior observed firsthand; Brodha's debrief on Pelhari cultural norms</td>
+          </tr>
+          <tr>
+            <td>A system was hacked / accessed</td>
+            <td>Elias — expedition kit used to locate the filter cache; Mara's navigation assessment</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="color:#1e8c3a; font-size:12px; margin-top:12px;">CONFIRM TRIGGER LIST WITH GM — session was logistically heavy and some triggers may apply differently.</p>
+    </div>
+  </div>
+
+  <!-- OPEN THREADS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[10]</span>
+      <span class="label">OPEN THREADS — HEADING INTO SESSION 07</span>
+    </div>
+    <div class="section-body">
+      <ul class="intel-list">
+        <li><strong>PELHARI BLOOD SPORTS</strong> — The captain sent a file. The crew has to review it and contact his ship tomorrow. This is the condition for receiving Oueikaru's nutrient supplies. Contents unknown.</li>
+        <li><strong>OUEIKARU'S DIETARY CLOCK</strong> — Yuleph can cover a few more meals. After that, supply depends on the Pelhari deal or an incoming trader flagged by Yuleph. If neither materializes, the pregenesis state fails and the mission fails.</li>
+        <li><strong>HULL BREACH REPAIRS</strong> — Prevek's supply run arrives in one to two days. Possible alternative: locating the survey crew's vessel. Four infected crew members are still somewhere in the spore fields — their ship may have materials.</li>
+        <li><strong>THE SURVEY CREW</strong> — Six went out. Two encountered, both dead-but-animated via thelac filament infection. Four unaccounted for. Brodha knows about them. The outpost has not sent anyone after them.</li>
+        <li><strong>PELHARI COURIER CREW — AGENDA</strong> — They have supplies for Oueikaru but withheld them. They docked at Vasken's Crossing — not a Pelhari hub. What were they doing here, and why do they have those specific supplies?</li>
+        <li><strong>THELAC ROSIN TRADE</strong> — Barter with Holst: class-two fiber for class-three thelac rosin. Legal at Thessavar unconfirmed. Cargo transfer can't happen until the Lovelace is operational.</li>
+        <li><strong>ELIAS'S RIFLE</strong> — Jammed. Clifton attempting repair.</li>
+        <li><strong>BENEDICT</strong> — Aboard the Lovelace in the isolation cabinet. Tech crew present. No further development this session.</li>
+        <li><strong>ELIAS'S MESSAGE</strong> — "Too much knowledge is dangerous." Signed with his initials. No timestamp. Still held on the air-gapped partition. No follow-up taken.</li>
+        <li><strong>NODE 7V ANOMALY</strong> — Untouched. Dark-sector browser history undeletable.</li>
+        <li><strong>CRETHUL DEBT (×1)</strong> — Vasken's Crossing is outside Crethul jurisdiction. No development.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="footer">
+    TAW-CVS LOVELACE // MISSION LOG // SESSION 06 // END OF RECORD<br>
+    VASKEN'S CROSSING — THELAC MOON — TRANSIT SYSTEM
+  </div>
+
+</div>
+</body>
+</html>
