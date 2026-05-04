@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARRIVAL // SESSION 07 RECAP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #33ff66;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 32px 16px;
+  }
+
+  .terminal { max-width: 820px; margin: 0 auto; }
+
+  .boot-header {
+    border: 1px solid #1a4a28;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    background: #050e08;
+  }
+  .boot-header .sys-line { color: #1e8c3a; font-size: 12px; margin-bottom: 2px; }
+  .boot-header .title { color: #33ff66; font-size: 22px; letter-spacing: 4px; margin: 8px 0 4px; }
+  .boot-header .subtitle { color: #1e8c3a; font-size: 12px; letter-spacing: 2px; }
+  .boot-header .blink { animation: blink 1.2s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .section { border: 1px solid #1a4a28; margin-bottom: 20px; background: #050e08; }
+  .section-header {
+    background: #0e2a18; padding: 8px 16px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid #1a4a28;
+  }
+  .section-header .tag { color: #1e8c3a; font-size: 11px; letter-spacing: 1px; }
+  .section-header .label { color: #33ff66; font-size: 13px; letter-spacing: 2px; }
+  .section-body { padding: 16px 20px; }
+
+  .timeline-item {
+    display: grid; grid-template-columns: 140px 1fr; gap: 0 16px;
+    margin-bottom: 16px; padding-bottom: 16px;
+    border-bottom: 1px dashed #0d2a18;
+  }
+  .timeline-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .tl-time { color: #1e8c3a; font-size: 12px; padding-top: 2px; }
+  .tl-event { color: #ccffdd; }
+  .tl-event strong { color: #33ff66; }
+
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .status-grid { grid-template-columns: 1fr; } }
+  .status-card { border: 1px solid #1a4a28; padding: 10px 14px; background: #03090a; }
+  .status-card .sc-name { color: #33ff66; font-size: 12px; letter-spacing: 1px; margin-bottom: 4px; }
+  .status-card .sc-status { font-size: 12px; color: #ccffdd; }
+  .status-card .sc-status.warn { color: #ffcc44; }
+  .status-card .sc-status.crit { color: #ff4444; }
+  .status-card .sc-status.ok   { color: #33ff66; }
+
+  .intel-list { list-style: none; padding: 0; }
+  .intel-list li {
+    padding: 4px 0 4px 18px; position: relative;
+    color: #ccffdd; border-bottom: 1px dashed #0d2a18; font-size: 13px;
+  }
+  .intel-list li:last-child { border-bottom: none; }
+  .intel-list li::before { content: "▸"; position: absolute; left: 0; color: #1e8c3a; }
+  .intel-list li strong { color: #33ff66; }
+
+  .adv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .adv-table th {
+    background: #0e2a18; color: #1e8c3a; padding: 6px 12px;
+    text-align: left; letter-spacing: 1px; border-bottom: 1px solid #1a4a28;
+  }
+  .adv-table td {
+    padding: 7px 12px; color: #ccffdd;
+    border-bottom: 1px dashed #0d2a18; vertical-align: top;
+  }
+  .adv-table tr:last-child td { border-bottom: none; }
+  .adv-table td:first-child { color: #33ff66; white-space: nowrap; }
+
+  .flavor-block {
+    border-left: 3px solid #1e8c3a; padding: 10px 16px;
+    background: #03090a; margin: 12px 0;
+    color: #99ddbb; font-size: 13px; font-style: italic;
+  }
+
+  .mission-banner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px; background: #0e2a18;
+    border: 1px solid #33ff66; margin-bottom: 28px;
+    flex-wrap: wrap; gap: 8px;
+  }
+  .mission-banner .mb-label { color: #1e8c3a; font-size: 11px; letter-spacing: 2px; }
+  .mission-banner .mb-value { color: #33ff66; font-size: 13px; }
+  .mission-banner .mb-value.active { color: #ffcc44; }
+  .mission-banner .mb-value.warn { color: #ffcc44; }
+  .mission-banner .mb-value.ok { color: #33ff66; }
+
+  .npc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .npc-grid { grid-template-columns: 1fr; } }
+  .npc-card { border: 1px solid #1a4a28; padding: 10px 14px; background: #03090a; }
+  .npc-card .npc-name { color: #33ff66; font-size: 12px; letter-spacing: 1px; margin-bottom: 2px; }
+  .npc-card .npc-role { color: #1e8c3a; font-size: 11px; margin-bottom: 4px; }
+  .npc-card .npc-detail { font-size: 12px; color: #ccffdd; }
+
+  .alert-block {
+    border: 1px solid #ff4444; background: #120505;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 13px; color: #ffaaaa;
+  }
+  .alert-block strong { color: #ff4444; }
+
+  .info-block {
+    border: 1px solid #1e8c3a; background: #030e08;
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 13px; color: #99ddbb;
+  }
+  .info-block strong { color: #33ff66; }
+
+  .footer { text-align: center; color: #1e8c3a; font-size: 11px; padding-top: 20px; letter-spacing: 1px; }
+  .divider { border: none; border-top: 1px solid #1a4a28; margin: 20px 0; }
+</style>
+</head>
+<body>
+<div class="terminal">
+
+  <div class="boot-header">
+    <div class="sys-line">TAW-CVS LOVELACE // CREW INTERFACE v4.1 // MISSION LOG</div>
+    <div class="sys-line">VASKEN'S CROSSING — DEPARTURE // TRANSIT LANE // EN ROUTE: THESSAVAR</div>
+    <div class="title">SESSION 07</div>
+    <div class="subtitle">THE LONG CARRY &nbsp;▸&nbsp; PELHARI BLOOD SPORTS &amp; DEPARTURE<span class="blink">_</span></div>
+  </div>
+
+  <div class="mission-banner">
+    <div>
+      <div class="mb-label">LOCATION</div>
+      <div class="mb-value">Vasken's Crossing → Transit Lane → En route Thessavar</div>
+    </div>
+    <div>
+      <div class="mb-label">SHIP STATUS</div>
+      <div class="mb-value warn">PATCHED — SPACE-WORTHY — FULL REPAIR DEFERRED (WEEKS)</div>
+    </div>
+    <div>
+      <div class="mb-label">OUEIKARU STATUS</div>
+      <div class="mb-value ok">NUTRIENT SUPPLY RESTORED — PREGENESIS STATE INTACT</div>
+    </div>
+    <div>
+      <div class="mb-label">ETA THESSAVAR</div>
+      <div class="mb-value">~20 HRS (12 TRANSIT + 8 APPROACH)</div>
+    </div>
+  </div>
+
+  <!-- SITUATION RECAP -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[01]</span>
+      <span class="label">SITUATION — OPENING STATE</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Session picks up where Session 6 ended. The Lovelace is grounded near the crash site. The Pelhari courier crew has the nutrient paste Oueikaru needs — but it is earmarked for another buyer, and they cannot sell or give it freely. The captain's offer: a ritual contest called a blood sport. The crew has not yet read the file he transmitted.
+      </p>
+      <ul class="intel-list">
+        <li>Systems are back online. The tech crew has done what it can. The ship is <strong>not space-worthy yet</strong> — but it can be relocated to the outpost landing pad with a skilled pilot.</li>
+        <li>Oueikaru requires meals every other day minimum. Current supply is critically short.</li>
+        <li><strong>Benedict</strong> (the creature hatched from the engineering drone — origin unknown) remains aboard, secured in the med bay cage.</li>
+        <li>Thelac spore contamination is visible throughout the cargo hold — salmon-colored dust on every surface. The other two decks are sealed and unaffected.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MOVING THE SHIP -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[02]</span>
+      <span class="label">RELOCATING THE LOVELACE</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        The crew debates moving the Lovelace to the outpost landing pad before resting. The tech crew advises that repairs will be faster and easier with the crane available at the pad — but the flight itself carries risk given the ship's condition. The consensus is to do it now.
+      </p>
+      <div class="timeline-item">
+        <div class="tl-time">NEYLA</div>
+        <div class="tl-event">Pilots the Lovelace off the rocky terrain and across to the outpost pad. The ride is rough — the ship barely clears rock formations on the way up. Partial success on the piloting roll. Elias gets involved from engineering, rolling <strong>Shields Up</strong> to buffer potential damage during the flight. Between the two of them, the ship lands without additional damage. The outpost crane and landing facilities are now accessible for repairs.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">REPAIR STATUS</div>
+        <div class="tl-event">The patch work can make the Lovelace space-worthy within roughly a day. A full structural repair — hull, struts, all of it — will require <strong>weeks in a proper space dock</strong>. The ship can fly, but it is not fixed. Prevek's supply materials and the outpost crane are now in play. Cargo hold spore cleanup is underway jointly with the tech crew and outpost teamsters.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOOD SPORTS BRIEFING -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[03]</span>
+      <span class="label">INTELLIGENCE — PELHARI BLOOD SPORTS</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Elias and Neyla spend the evening reviewing the file the Pelhari captain transmitted. Translating it proves difficult — Pelhari is structurally complex with multiple noun forms and dense verb conjugation. Neyla's <strong>Linguist</strong> skill and Elias's executive assistant allow them to work through it. Full success on a combined assessment roll. Key findings:
+      </p>
+      <div class="info-block">
+        <strong>PELHARI RITUAL COMBAT — SUMMARY</strong><br><br>
+        The Pelhari have a long history of lethal trial combat. Approximately 500 years ago this was outlawed — the ritualized violence was channeled into a formalized sport. Participants wear special garments fitted with <strong>four ribbon loops</strong> (two at the armpits, two at the hips). Each loop, when pulled, releases a short red ribbon. The first combatant to have all four ribbons pulled loses. The bout is decided by physical maneuvering and use of blunted weapons — no actual harm is intended. All parties agree in advance to abide by the outcome.
+      </div>
+      <div class="alert-block">
+        <strong>CRITICAL FINDING (FULL SUCCESS ONLY):</strong> In individual honor contests of this type, <strong>the loser is culturally expected to take their own life</strong>. This is distinct from team formats where no such obligation applies. The Continuum outlaws murder — it does not legislate personal choice. This information would not have surfaced on a partial success. Neyla's translation flagged a passage Elias had initially misread as "walk away empty-handed" — the correct reading is the opposite.
+      </div>
+      <ul class="intel-list" style="margin-top:12px;">
+        <li>Weapons may be used but are blunted. No lethality from the weapons themselves.</li>
+        <li>Use of the environment (furniture, walls, tables) is permitted — not explicitly against the rules.</li>
+        <li>Innate physical abilities are likely in a gray area. Compulsion or psionics probably fall outside the spirit of the contest. Teleportation: no explicit rule against it.</li>
+        <li>Each side fields a <strong>second</strong> — a designated attendant who assists the combatant into the garment and stands witness. No active participation from seconds is implied or sanctioned.</li>
+        <li>The crew is not required to fight to the death. Their lives are not on the line. The Pelhari courier crew would be subject to the full cultural expectation if they lose — that is their risk to take.</li>
+      </ul>
+      <p style="color:#ccffdd; font-size:13px; margin-top:14px;">
+        This last point — that the suicide expectation falls on the Pelhari captain, not on the crew's champion — was confirmed by bar patrons after the fact. The crew's decision to proceed was made without knowing this.
+      </p>
+    </div>
+  </div>
+
+  <!-- KEPLER'S WAGER -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[04]</span>
+      <span class="label">SIDE ACTION — KEPLER'S WAGER</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Before the bout, Kepler decides to place a wager on Clifton with the outpost cantina crowd. This does not go cleanly.
+      </p>
+      <div class="timeline-item">
+        <div class="tl-time">THE BET</div>
+        <div class="tl-event">Kepler approaches Brodha and the bar crowd with his <strong>class-one computer kit</strong> as the wager. The crowd is interested. Someone examines the kit to assess its value — and in doing so, surfaces an <strong>open file referencing a false identity</strong> linked to Kepler. The identity appears to have a bounty attached to it.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">THE COMPLICATION</div>
+        <div class="tl-event">Partial success on the assessment roll. A representative of the interested parties makes it clear: the bounty on the identity is worth more than the computer kit. Kepler will need to put up more than he's asking from others — otherwise nothing stops anyone from simply collecting the bounty instead. Kepler ups the ante: <strong>his class-two rifle goes into the pot as well</strong>. This satisfies them. The wager pool is collectively assembled from bar patrons' trade goods.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">POTENTIAL PAYOUT</div>
+        <div class="tl-event">All wagers — Kepler's kit and rifle, plus contributions from the crowd — are held by Brodha. If Clifton wins, Kepler collects the pool: assessed at the equivalent of a <strong>class-three cargo</strong>. Kepler's identity exposure and the bounty are not resolved — that file is now known to at least several people at Vasken's Crossing.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE FIGHT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[05]</span>
+      <span class="label">THE BOUT — CLIFTON VS. PELHARI CAPTAIN</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        The cantina tables and chairs are pushed back to create a rough octagonal space. The Pelhari attendant fits Clifton into a blood sports garment — four ribbon loops in place. K'thlx-kek acts as Clifton's second. The Pelhari captain is already outfitted. Mara observes. The crowd has gathered.
+      </p>
+      <div class="timeline-item">
+        <div class="tl-time">OPENING EXCHANGE</div>
+        <div class="tl-event">Clifton plays it deliberately slow — holding back, watching the captain's footwork and weapon habits. The captain is confident, moving the blunted baton from hand to hand with practiced ease. Clifton allows a few swings, narrowly deflecting, gauging. Then a fast parry and a sudden advance — <strong>full success on assessment</strong>. Clifton snags one of the captain's ribbons. The captain, composed, acknowledges it — then pulls one of Clifton's in the same exchange. Score: 3–3.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CAPTAIN ADVANCES</div>
+        <div class="tl-event">The captain moves more aggressively — a one-handed cartwheel, repositioning toward a table at the room's edge. He is using the furniture deliberately. Clifton tries to crowd him into the corner and muscle inside his guard. <strong>Partial success.</strong> This is when Kepler acts.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">KEPLER INTERVENES</div>
+        <div class="tl-event">Kepler — having waited for the right moment — uses his stealth ability to appear unexpectedly near the table the captain is balanced on and shifts it. <strong>Partial success on Sabotage (metal) — upgraded to full via Clifton's Tactics skill</strong>, allowing Clifton to choose the consequence. The captain lands awkwardly on a chair, which breaks. He is tangled in the debris for a moment. In the scramble, Clifton gets in to pull a ribbon — but pivoting away, Clifton's own ribbon catches on the chair wreckage and pulls free. Score: 2–2. The captain looks around — there is visible suspicion — but nothing can be confirmed. Play continues.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">K'THLX-KEK INTERVENES</div>
+        <div class="tl-event">K'thlx-kek attempts to use Compel on a random bar patron, trying to get them to stumble into the fight and create an opening for Clifton. <strong>Failed roll.</strong> The patron bumbles in at the wrong moment — just as Clifton is pressing the captain — and the captain uses the disruption to get a ribbon off Clifton instead. Score: 1–2, captain leads.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CLIFTON TELEPORTS</div>
+        <div class="tl-event">Clifton has one ribbon remaining. Rather than absorb another exchange, he commits: feints a straightforward rush, then teleports at the last instant — reappearing directly behind the captain with momentum already carrying through the angle. The movement lines up both remaining ribbons in one pass. <strong>Full success.</strong> Both of the captain's ribbons pull free simultaneously. The captain turns — and finds his garment empty. He looks at Clifton for a moment. Then: a slow exhale. A nod.</div>
+      </div>
+      <div class="flavor-block">
+        "You fight well." A pause. "Whatever nutrient supplies you need — they are yours."
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">AFTERMATH</div>
+        <div class="tl-event">Clifton introduces himself by his old military rank: <strong>Specialist First Class Poole</strong>. The captain receives this without comment. A round of drinks is poured. The captain produces a small opaque vial from his coat, pours it into his own glass, and drinks. He offers it. Clifton declines politely. The captain does not press it. The crew later learns — from bar patrons, after the Pelhari depart — that the ritual suicide obligation applies to the Pelhari captain in a formal honor bout. Whether he complied with that expectation is not confirmed.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WINNINGS & SUPPLIES -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[06]</span>
+      <span class="label">OUTCOMES — WINNINGS AND SUPPLIES</span>
+    </div>
+    <div class="section-body">
+      <ul class="intel-list">
+        <li><strong>OUEIKARU'S NUTRIENT SUPPLY</strong> — Restored in full. Pelhari crew delivers supplies directly to the Lovelace. Pregenesis state maintained. Mission continues.</li>
+        <li><strong>KEPLER'S WAGER PAYOUT</strong> — Brodha returns Kepler's computer kit and rifle, plus the collective pool from the bar crowd. Total assessed value: <strong>class-three cargo equivalent</strong>. Holst is directed to load it onto the Lovelace.</li>
+        <li><strong>KEPLER'S IDENTITY EXPOSURE</strong> — At least several people at Vasken's Crossing now know about the false identity file on Kepler's computer kit and the associated bounty. This is unresolved.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- BENEDICT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[07]</span>
+      <span class="label">BENEDICT — STATUS UPDATE</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        During transit, Kepler visits the med bay. Benedict — the creature that hatched from the engineering drone (origin unknown) — is active and clearly wants out of its cage. It is throwing itself repeatedly against the enclosure walls.
+      </p>
+      <div class="timeline-item">
+        <div class="tl-time">BIOLOGY</div>
+        <div class="tl-event">Kepler runs a scan using his computer kit and interface roll. <strong>Partial success — significant findings.</strong> Benedict is translucent with a yolk-like nucleus visible through the body. Color-shifts in response to voice and proximity — goes from translucent to pink when Kepler speaks to it, behavior calming slightly. Diet: <strong>polymers and plastics</strong>. It has been subsisting on whatever polymer components the cage is made from. It also requires small amounts of electrical power to undergo its development cycle — this explains the anomalous micro-draws on the Lovelace's engineering systems going back to Session 1. Benedict is expected to grow to approximately house-cat size. It will not grow larger than that. It does not eat organic tissue.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">BEHAVIORAL NOTE</div>
+        <div class="tl-event">Benedict responds to Kepler's voice. Calms when spoken to. Actively seeks egress. The cage polymer is apparently edible — the creature has been partially consuming its own enclosure. Kepler offers food on a plastic spoon; Benedict takes the food but digests the spoon as well, which it keeps. The crew has not yet decided whether to release it into the ship.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">CRETHUL DRONE — TRANSMISSION</div>
+        <div class="tl-event">Separately: Elias's tech crew assessment (full success on assessment + expertise) turns up confirmation that the drone shell Benedict hatched from — has been <strong>actively transmitting since Session 1</strong>. Encrypted signal. Content unknown. The transmission appears to be location-based. The tech crew cannot safely remove the transmitter without potentially damaging ship systems; disentangling it properly will require time in a space dock. Elias proposes a Faraday cage to block transmissions in the interim. The crew gets Mara involved — she deploys her AI to take control of the drone hardware. <strong>Full success on the combined engineering roll.</strong> The AI is now embedded in the drone unit and will spend transit time assessing what it is, what it has been transmitting, and what the religious iconography covering it means. No immediate answers — assessment is ongoing.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPARTURE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[08]</span>
+      <span class="label">DEPARTURE — VASKEN'S CROSSING</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        The Lovelace is patched to minimum space-worthiness. Cargo hold is cleaned of thelac spores. The Pelhari courier crew departs first, heading their own direction. The Lovelace lifts from the outpost pad and re-enters the transit lane. All hands aboard.
+      </p>
+      <ul class="intel-list">
+        <li><strong>TRANSIT ESTIMATE:</strong> Approximately 12 hours in transit lane, then 8 hours final approach to Thessavar. Total: under one solar day.</li>
+        <li>The remainder of the transit — what the crew does during those 20 hours — carries over to next session.</li>
+        <li><strong>Oueikaru's pregenesis event</strong> (a spawning pool ceremony with Dr. Liang Huxu and Dhuvarel) was briefly glimpsed by some crew at session's end. No crew intervention required. Light applause observed from those present.</li>
+        <li>Session ends en route. <strong>Thessavar arrival and mission handoff will open Session 8.</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CREW STATUS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[09]</span>
+      <span class="label">CREW STATUS — END OF SESSION</span>
+    </div>
+    <div class="section-body">
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="sc-name">CLIFTON POOLE</div>
+          <div class="sc-status ok">Won the blood sport bout. Teleport used in combat for the first time. Identity revealed to the Pelhari captain as Specialist First Class Poole. No injuries.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">ELIAS CORVALLIN</div>
+          <div class="sc-status warn">Confirmed drone shell has been transmitting since Session 1. Drone now under partial AI control via Mara's assist. Transmission content still unknown. Executive assistant busy.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">KEPLER</div>
+          <div class="sc-status warn">Wager won — class-three cargo equivalent added to ship. False identity file exposed to Vasken's Crossing bar crowd. Bounty amount unknown. Computer kit and rifle recovered. Developing relationship with Benedict.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">MARA WEBB</div>
+          <div class="sc-status ok">AI deployed into drone unit. Assessment ongoing. Witnessed Oueikaru's pregenesis ceremony. No injuries.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">NEYLA LUNEXA</div>
+          <div class="sc-status ok">Piloted the Lovelace relocation successfully with Elias's assist. Provided critical translation of the blood sports file — suicide clause identified. No injuries.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">K'THLX-KEK</div>
+          <div class="sc-status warn">Acted as Clifton's second. Compel attempt during the bout failed — created an opening for the captain rather than Clifton. No injuries. Tugged on ribbons during the pre-bout inspection.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPEN THREADS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[10]</span>
+      <span class="label">OPEN THREADS — ENTERING SESSION 8</span>
+    </div>
+    <div class="section-body">
+      <ul class="intel-list">
+        <li><strong>THE LONG CARRY</strong> — <span style="color:#33ff66;">RESOLVED.</span> Oueikaru delivered to Thessavar. Handoff to Dr. Liang Huxu and Dhuvarel complete. Pregenesis state maintained through delivery.</li>
+        <li><strong>BENEDICT</strong> — Aboard, alive, eating the cage. Craves contact. Crew has not yet decided whether to release it into the ship. Diet and power requirements now documented.</li>
+        <li><strong>CRETHUL DRONE TRANSMISSION</strong> — AI embedded and assessing. What has been transmitted, to whom, and for how long is still unknown. The drone is covered in religious iconography.</li>
+        <li><strong>ELIAS'S ENCRYPTED MESSAGE</strong> — Origin and content still unresolved. Not addressed this session.</li>
+        <li><strong>KEPLER'S FALSE IDENTITY</strong> — Bounty file now known to multiple parties at Vasken's Crossing. No immediate pursuit, but exposure is confirmed.</li>
+        <li><strong>SHIP REPAIRS</strong> — Space-worthy but not fully repaired. Full structural work requires weeks in a proper dock. Assumed handled on Thessavar — confirm if otherwise.</li>
+        <li><strong>REWARD LEDGER</strong> — Class-two asset from the Knot Undone contract still unselected. Superconducting fiber trade with Holst (for thelac rosin) — execution status unconfirmed before departure.</li>
+        <li><strong>VASKEN'S CROSSING — BACKGROUND</strong> — Four infected thelac harvesters still unaccounted for in the spore fields; Pelhari courier crew agenda never established. Crew has left the moon — unlikely to return.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    TAW-CVS LOVELACE &nbsp;//&nbsp; MISSION: THE LONG CARRY &nbsp;//&nbsp; SESSION 07 OF RECORD<br>
+    NEXT: THESSAVAR — ARRIVAL AND HANDOFF
+  </div>
+
+</div>
+</body>
+</html>
