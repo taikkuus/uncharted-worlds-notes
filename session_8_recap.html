@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARRIVAL // SESSION 08 RECAP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #33ff66;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 32px 16px;
+  }
+
+  .terminal { max-width: 820px; margin: 0 auto; }
+
+  .boot-header {
+    border: 1px solid #1a4a28;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    background: #050e08;
+  }
+  .boot-header .sys-line { color: #1e8c3a; font-size: 12px; margin-bottom: 2px; }
+  .boot-header .title { color: #33ff66; font-size: 22px; letter-spacing: 4px; margin: 8px 0 4px; }
+  .boot-header .subtitle { color: #1e8c3a; font-size: 12px; letter-spacing: 2px; }
+  .boot-header .blink { animation: blink 1.2s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .section { border: 1px solid #1a4a28; margin-bottom: 20px; background: #050e08; }
+  .section-header {
+    background: #0e2a18; padding: 8px 16px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid #1a4a28;
+  }
+  .section-header .tag { color: #1e8c3a; font-size: 11px; letter-spacing: 1px; }
+  .section-header .label { color: #33ff66; font-size: 13px; letter-spacing: 2px; }
+  .section-body { padding: 16px 20px; }
+
+  .timeline-item {
+    display: grid; grid-template-columns: 140px 1fr; gap: 0 16px;
+    margin-bottom: 16px; padding-bottom: 16px;
+    border-bottom: 1px dashed #0d2a18;
+  }
+  .timeline-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .tl-time { color: #1e8c3a; font-size: 12px; padding-top: 2px; }
+  .tl-event { color: #ccffdd; }
+  .tl-event strong { color: #33ff66; }
+
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .status-grid { grid-template-columns: 1fr; } }
+  .status-card { border: 1px solid #1a4a28; padding: 10px 14px; background: #03090a; }
+  .status-card .sc-name { color: #33ff66; font-size: 12px; letter-spacing: 1px; margin-bottom: 4px; }
+  .status-card .sc-status { font-size: 12px; color: #ccffdd; }
+  .status-card .sc-status.warn { color: #ffcc44; }
+  .status-card .sc-status.ok   { color: #33ff66; }
+
+  .intel-list { list-style: none; padding: 0; }
+  .intel-list li {
+    padding: 4px 0 4px 18px; position: relative;
+    color: #ccffdd; border-bottom: 1px dashed #0d2a18; font-size: 13px;
+  }
+  .intel-list li:last-child { border-bottom: none; }
+  .intel-list li::before { content: "▸"; position: absolute; left: 0; color: #1e8c3a; }
+  .intel-list li strong { color: #33ff66; }
+
+  .job-card {
+    border: 1px solid #1a4a28; background: #03090a;
+    padding: 14px 16px; margin-bottom: 10px;
+  }
+  .job-card:last-child { margin-bottom: 0; }
+  .job-card .job-title { color: #33ff66; font-size: 13px; letter-spacing: 1px; margin-bottom: 6px; }
+  .job-card .job-body { font-size: 12px; color: #ccffdd; line-height: 1.7; }
+  .job-card .job-tag {
+    display: inline-block; font-size: 11px; padding: 2px 8px;
+    border-radius: 2px; margin-bottom: 8px; letter-spacing: 0.06em;
+  }
+  .tag-amber { background: rgba(255,204,68,0.1); color: #ffcc44; border: 1px solid #7a5a25; }
+  .tag-red   { background: rgba(255,68,68,0.1);  color: #ff6666; border: 1px solid #7a2525; }
+  .tag-dim   { background: rgba(255,255,255,0.05); color: #6a8090; border: 1px solid #1e2a35; }
+  .tag-blue  { background: rgba(77,184,255,0.1); color: #4db8ff; border: 1px solid rgba(77,184,255,0.3); }
+
+  .flavor-block {
+    border-left: 3px solid #1e8c3a; padding: 10px 16px;
+    background: #03090a; margin: 12px 0;
+    color: #99ddbb; font-size: 13px; font-style: italic;
+  }
+
+  .mission-banner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px; background: #0e2a18;
+    border: 1px solid #33ff66; margin-bottom: 28px;
+    flex-wrap: wrap; gap: 8px;
+  }
+  .mission-banner .mb-label { color: #1e8c3a; font-size: 11px; letter-spacing: 2px; }
+  .mission-banner .mb-value { color: #33ff66; font-size: 13px; }
+  .mission-banner .mb-value.warn { color: #ffcc44; }
+  .mission-banner .mb-value.ok { color: #33ff66; }
+
+  .resolved-tag {
+    display: inline-block; font-size: 11px; padding: 2px 8px;
+    background: rgba(77,255,176,0.08); color: #33ff66;
+    border: 1px solid #1e8c3a; border-radius: 2px;
+    letter-spacing: 0.08em; margin-left: 8px; vertical-align: middle;
+  }
+
+  .footer { text-align: center; color: #1e8c3a; font-size: 11px; padding-top: 20px; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div class="terminal">
+
+  <div class="boot-header">
+    <div class="sys-line">TAW-CVS LOVELACE // CREW INTERFACE v4.1 // MISSION LOG</div>
+    <div class="sys-line">THESSAVAR — GALACTIC MARKET DISTRICT // LOVELACE IN DOCK</div>
+    <div class="title">SESSION 08</div>
+    <div class="subtitle">DOWNTIME ON THESSAVAR &nbsp;▸&nbsp; REPAIRS, MARKETS, AND NEXT CONTRACTS<span class="blink">_</span></div>
+  </div>
+
+  <div class="mission-banner">
+    <div>
+      <div class="mb-label">LOCATION</div>
+      <div class="mb-value">Thessavar — Galactic Market District</div>
+    </div>
+    <div>
+      <div class="mb-label">SHIP STATUS</div>
+      <div class="mb-value warn">IN DOCK — ESTIMATED 10 SESSIONS REPAIR TIME</div>
+    </div>
+    <div>
+      <div class="mb-label">LONG CARRY</div>
+      <div class="mb-value ok">RESOLVED — HANDOFF COMPLETE</div>
+    </div>
+    <div>
+      <div class="mb-label">NEXT CONTRACT</div>
+      <div class="mb-value warn">PENDING — VOTE UNRESOLVED</div>
+    </div>
+  </div>
+
+  <!-- OPENING STATE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[01]</span>
+      <span class="label">OPENING STATE</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        The Lovelace is in dock at Thessavar. The Long Carry is done. Oueikaru has been delivered. The pregenesis ceremony occurred during transit and was witnessed by the crew — waist-up, nobody gyrating, more like standing in water. The ship is expected to be in dock for approximately ten in-game weeks. The crew is free agents for the duration.
+      </p>
+      <ul class="intel-list">
+        <li>Thessavar has a zoned layout: a <strong>Galactic Market district</strong> for off-world visitors, a Pelhari settlement ring beyond it, and <strong>Spiritual markets</strong> in the outer ring. Most crew business can be conducted in the Galactic zone.</li>
+        <li>Known cargo aboard: <strong>Thelac rosin</strong> (class-three) and <strong>cryopumps and thermal condensate</strong> (class-three, from Kepler's wager payout). Superconducting fiber has already been sold at a prior station.</li>
+        <li>Thelac rosin is not straightforwardly legal on Thessavar but is not outright prohibited. A licensed intermediary is required to find a buyer.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MARA'S PINKY -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[02]</span>
+      <span class="label">MARA — CYBERNETIC REPLACEMENT <span class="resolved-tag">RESOLVED</span></span>
+    </div>
+    <div class="section-body">
+      <div class="timeline-item">
+        <div class="tl-time">ACQUISITION</div>
+        <div class="tl-event">Mara attempts to source a replacement pinky through the Galactic Market. The roll goes poorly. Elias assists with his commercial background. The deal still needs something to close it — Mara calls in a <strong>Coldwall favor</strong> rather than risk losing cargo. The favor is cleared.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">OUTCOME</div>
+        <div class="tl-event">A cybernetic replacement is installed. Polymer skin synthesized to match Mara's complexion. Up close: a faint seam, reads as a hand wrinkle at distance. Three days recovery. Mara has her pinky back — cybernetic, with occasional phantom sensation.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GILVARA -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[03]</span>
+      <span class="label">NEW NPC — GILVARA, PELHARI ATTACHÉ</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Rep K sends contacts to locate a commercial intermediary familiar with Formicides or prior off-world dealings. The result is <strong>Gilvara</strong>, a Pelhari attaché in off-world commerce. First contact via screen call.
+      </p>
+      <div class="flavor-block">
+        Fine velvety golden fur, almost invisible at distance. Large warm eyes. No external ears. Spotted patterning on her head and down her back. Business attire with an ornate tessellated-triangle necklace — each triangle engraved with a Pelhari pictogram. Formal in bearing, practically useful.
+      </div>
+      <ul class="intel-list">
+        <li>Gilvara confirms thelac rosin can be sold on Thessavar to buyers with the appropriate license. She will find one for a percentage fee.</li>
+        <li>She provides a <strong>+1 on the barter roll</strong> as intermediary. Worst-case outcomes are reduced by her involvement.</li>
+        <li>Rep K makes the roll with her bonus plus career modifier. Result: <strong>full success.</strong> The thelac rosin is sold. Gilvara's fee is folded into the transaction. Cargo cleared.</li>
+        <li>Gilvara continues to be useful: she offers to help the crew find work. They are interested.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SHIP WEAPON -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[04]</span>
+      <span class="label">LOVELACE UPGRADE — ENERGY CANNON</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        The crew decides to use the cryopumps-and-condensate cargo to acquire an offensive weapon for the Lovelace. Their existing point-defense turrets handle small craft. They want something for larger threats. The Crethul are the implicit reference point.
+      </p>
+      <div class="timeline-item">
+        <div class="tl-time">SELECTION</div>
+        <div class="tl-event">Crew deliberates between energy cannons and a launcher. Clifton advocates energy cannons — effective against Crethul-scale threats, less useful against small fast craft (which the turrets already cover). Motion carries.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">PLACEMENT</div>
+        <div class="tl-event">Debate over mounting location. Clifton initially suggests rear-facing for a running-fight posture. Elias argues center-top for a forward arc with swivel range. The GM notes that in space, orientation is relative — the ship can spin. Final placement: <strong>center-top, forward-facing primary arc, with swivel.</strong> Approximately 60-degree effective coverage.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">ACQUISITION</div>
+        <div class="tl-event">Class-two weapon, consistent with the Lovelace's class. The cryopumps-and-condensate cargo is consumed in the transaction — Gilvara's network handles procurement. Cargo hold updated. Ship journal updated by Rep K.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">NICKNAME</div>
+        <div class="tl-event">GM solicits a name. After deliberation: <strong>Class-Three Heavy Discharge Cannon, nicknamed "the Loudmouth."</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ELIAS'S SNIPER RIFLE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[05]</span>
+      <span class="label">ELIAS — SNIPER RIFLE (NOT REPAIRED)</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        Elias raises the damaged sniper rifle. A prior attempt to patch it failed. The acquisition path would require putting up cargo or other assets as collateral — on a failure, the collateral is lost regardless. Elias decides the cost isn't worth it for a secondary weapon. The rifle is marked nonfunctional on the sheet.
+      </p>
+    </div>
+  </div>
+
+  <!-- JOB LISTINGS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[06]</span>
+      <span class="label">CONTRACT BOARD — THREE POSTINGS</span>
+    </div>
+    <div class="section-body">
+      <p style="color:#ccffdd; font-size:13px; margin-bottom:14px;">
+        The crew tells Gilvara they want work — specifically artifact retrieval, off-world, with some surface engagement. She filters accordingly and returns three options.
+      </p>
+
+      <div class="job-card">
+        <div class="job-title">JOB 01 — THE GRAPHICAL CODEX</div>
+        <span class="job-tag tag-amber">MEDIUM RISK</span>
+        <span class="job-tag tag-dim">UNDREL PRESERVATION SOCIETY / CONTINUUM</span>
+        <div class="job-body">
+          Client: <strong>Keth Aulric</strong> (Undrel — known to the crew from Session 1). Posting organization: Undrel Preservation Society, filed through the Continuum.<br><br>
+          Artifact: A pre-Continuum navigation archive called the <strong>Graphical Codex</strong>. Approximately toaster-sized.<br><br>
+          Location: <strong>Ruum 4</strong> — a tidally locked moon. Surface temperatures on the sun-facing side exceed safe thresholds. The outpost sits on the terminator line with minimal atmosphere. The corridor to this system is <strong>unstable — a wild jump may be required.</strong><br><br>
+          Rate: Negotiable. The crew has prior history with Keth Aulric and could likely negotiate better terms.
+        </div>
+      </div>
+
+      <div class="job-card">
+        <div class="job-title">JOB 02 — CRETHUL SEXTANT</div>
+        <span class="job-tag tag-red">HIGH RISK</span>
+        <span class="job-tag tag-red">LEGALLY QUESTIONABLE</span>
+        <div class="job-body">
+          Client: Unknown non-Crethul party. The agent requesting it is not Crethul — they argue the artifact predates the current Crethul empire and is therefore not covered by Crethul cultural property law. Academically defensible. Practically complicated.<br><br>
+          Artifact: A <strong>pre-theocratic Crethul ceremonial navigation instrument</strong> — a space sextant. Star-alignment device.<br><br>
+          Rate: High-tier flat fee on delivery.<br><br>
+          Complication: Requires <strong>transponder signal change</strong> en route. Known to most of the crew to be seriously illegal for civilian vessels. Rep K explicitly notes the crew is already on the Crethul's bad side. Voted down.
+        </div>
+      </div>
+
+      <div class="job-card">
+        <div class="job-title">JOB 03 — NOSI WAYSTONES</div>
+        <span class="job-tag tag-dim">ANONYMOUS</span>
+        <span class="job-tag tag-blue">CLOSEST LOCATION</span>
+        <div class="job-body">
+          Client: <strong>Anonymous.</strong> No contact details. Payment held by neutral third party — verifiable and guaranteed before departure, but not releasable until job completion. Once accepted, there is no one to contact.<br><br>
+          Artifact: <strong>NOSI waystone markers</strong> — small columns of undetermined material. Described as positional notation. Part of an ancient survey expedition, seven markers total, never recovered. Species of origin unknown. Low interest from other parties in the posting system.<br><br>
+          Location: Outer edge of the Thessavar system — beyond the range of Pelhari surveys of their own system. Closest of the three jobs.<br><br>
+          Note: The crew flags that "NOSI" and the requesting species are unidentified. Clifton finds the obscurity appealing. Posting has very low engagement — no other parties appear to be competing for it.
+        </div>
+      </div>
+
+      <div style="margin-top:16px; padding:12px 16px; border: 1px solid #ffcc44; background: rgba(255,204,68,0.04);">
+        <div style="color:#ffcc44; font-size:11px; letter-spacing:1px; margin-bottom:8px;">// VOTE — UNRESOLVED AT SESSION END</div>
+        <div style="color:#ccffdd; font-size:13px;">
+          Job 2 eliminated early — Crethul complications, transponder risk. Final vote split between <strong>Job 1</strong> (Keth Aulric, known client, unstable corridor) and <strong>Job 3</strong> (anonymous, NOSI waystones, outer system). A tiebreaker — one player absent — was to be resolved by text message. Session ended before the vote closed. <strong>Contract selection carries to Session 9.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREW STATUS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[07]</span>
+      <span class="label">CREW STATUS — END OF SESSION</span>
+    </div>
+    <div class="section-body">
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="sc-name">CLIFTON POOLE</div>
+          <div class="sc-status ok">Voted for Job 1 (Graphical Codex). Interested in xenoarcheology and surface work. No injuries. Sniper rifle nonfunctional.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">ELIAS CORVALLIN</div>
+          <div class="sc-status warn">Assisted Mara's acquisition. Declined to repair sniper rifle — cost-benefit didn't hold. Raising possibility of working outside Continuum space for better pay. Rifle marked nonfunctional.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">MARA WEBB</div>
+          <div class="sc-status ok">Cybernetic pinky installed. Coldwall favor expended. Investigating Benedict further via Thessavar archives is still on her list — not addressed this session.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">REP K'THLX-KEK</div>
+          <div class="sc-status ok">Led market operations. Located Gilvara via Formicides diplomatic contacts. Managed thelac rosin sale and Lovelace weapon acquisition. Ship journal updated.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">KEPLER</div>
+          <div class="sc-status warn">Not prominently active this session. Benedict situation unaddressed — still caged, still eating the cage.</div>
+        </div>
+        <div class="status-card">
+          <div class="sc-name">NEYLA LUNEXA</div>
+          <div class="sc-status warn">Not prominently active this session. AI still embedded in drone shell, assessment ongoing.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPEN THREADS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="tag">[08]</span>
+      <span class="label">OPEN THREADS — ENTERING SESSION 9</span>
+    </div>
+    <div class="section-body">
+      <ul class="intel-list">
+        <li><strong>CONTRACT VOTE</strong> — Unresolved. Job 1 (Keth Aulric / Graphical Codex / Ruum 4) vs. Job 3 (Anonymous / NOSI Waystones / outer Thessavar system). Tiebreaker pending absent player. Opens Session 9.</li>
+        <li><strong>DRONE TRANSMISSION</strong> — AI embedded and assessing. No results surfaced this session. Neyla's AI has had weeks of dock time to work. Ripe to surface in Session 9.</li>
+        <li><strong>ELIAS'S MESSAGE</strong> — "Too much knowledge can be dangerous." Origin and sender still unknown. Not addressed this session.</li>
+        <li><strong>BENEDICT</strong> — Still caged. Mara wants to investigate further via Thessavar archives — not done yet. Dock workers are presumably moving around the ship during repairs.</li>
+        <li><strong>KEPLER'S FALSE IDENTITY</strong> — Exposure at Vasken's Crossing unresolved. No pursuit has surfaced yet.</li>
+        <li><strong>SHIP REPAIRS</strong> — Underway. Estimated ten sessions in dock. The Loudmouth (energy cannon) is being installed as part of the refit.</li>
+        <li><strong>GILVARA</strong> — New contact. Pelhari off-world commerce attaché. Willing to continue helping. Worth maintaining.</li>
+        <li><strong>MARA'S BENEDICT RESEARCH</strong> — Flagged as intent, not executed. Thessavar has xenobiological archives and specialists. Follow up next session if the contract vote opens downtime.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    TAW-CVS LOVELACE &nbsp;//&nbsp; POST-LONG CARRY ARC &nbsp;//&nbsp; SESSION 08 OF RECORD<br>
+    NEXT: CONTRACT SELECTION — ARTIFACT RETRIEVAL ARC BEGINS
+  </div>
+
+</div>
+</body>
+</html>
